@@ -22,20 +22,28 @@
     </header>
 
     <main class="container">
-        <h1 class="Titre_principal">Rechercher une destination</h1>
         <section class="Recherche">
             <div class="Recherche_container">
+                <h1 class="Titre_principal">Rechercher une destination</h1>
+
                 <div class="lieu_depart">
                     <input type="text" id="lieu_depart" placeholder="Lieu de départ">
                 </div>
                 <div class="lieu_arrivee">
                     <input type="text" id="lieu_arrivee" placeholder="Lieu d'arrivée">
-                    <button><img src="img/deuxFleche.svg" alt=""></button>
+                    <button id="btn_reverse"><img src="img/deuxFleche.svg" alt=""></button>
                 </div>
                 <div class="date">
                     <input type="date" id="date_depart">
                     <input type="date" id="date_retour">
                 </div>
+                <h3>Combien de personne ?</h3>
+                <div class="nbr_personne">
+                    <button class="btn-nbr">-</button>
+                    <span id="nbr_personne">1</span>
+                    <button class="btn-nbr">+</button>
+                </div>
+                <button class="btn-recherche">Voir les trajets</button>
             </div>
             <div class="image">
                 <img src="img/Montagne.svg" alt="">
@@ -43,5 +51,6 @@
         </section>
     </main>
 </body>
-
+<script src="../js/nbr_passenger.js"></script>
+<script src="../js/reverse_place.js"></script>
 </html>
