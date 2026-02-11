@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>europe.transports | Choix du trajet</title>
+    <link rel="stylesheet" href="../css/trajets.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo"><img src="img/Logo.svg" alt=""></div>
+        <nav>
+            <a href="dashboard.html">Voyager</a>
+            <a href="#">Billets</a>
+            <a href="#">Compte</a>
+            <a href="#">Contact</a>
+        </nav>
+        <button class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+    </header>
+
+    <main class="container">
+        <h1 class="Titre_principal">Trajets disponibles</h1>
+
+        <div class="calendar-grid">
+            <div class="day active"><span>Mer. 11 fév.</span><p>45€</p></div>
+            <div class="day"><span>Jeu. 12 fév.</span><p>39€</p></div>
+            <div class="day"><span>Ven. 13 fév.</span><p>55€</p></div>
+            <div class="day"><span>Sam. 14 fév.</span><p>42€</p></div>
+            <div class="day"><span>Dim. 15 fév.</span><p>49€</p></div>
+        </div>
+
+        <div class="trajets-list">
+            <div class="trajet-card">
+                <div class="trajet-summary" onclick="toggleDetails(this)">
+                    <div class="time-info">
+                        <div class="departure">
+                            <strong>14:40</strong> <span>Paris Saint-Lazare</span> </div>
+                        <div class="duration-line">
+                            <span>3h56</span>
+                            <div class="line"></div>
+                            <span>Direct</span>
+                        </div>
+                        <div class="arrival">
+                            <strong>18:36</strong> <span>Bordeaux-Saint-Clair</span> </div>
+                    </div>
+                    <div class="price-section">
+                        <p class="opt-price">45.00€</p>
+                        <button class="btn-add">Choisir</button>
+                    </div>
+                </div>
+
+                <div class="trajet-details" style="display: none;">
+                    <div class="escale">
+                        <div class="dot active"></div>
+                        <div class="escale-info">
+                            <strong>14:40 - Paris Saint-Lazare</strong>
+                            <p>Train TER N°3117 - Vers Le Havre</p>
+                        </div>
+                    </div>
+                    <div class="v-line"></div>
+                    <div class="escale">
+                        <div class="dot"></div>
+                        <div class="escale-info">
+                            <strong>16:33 - Bréauté - Beuzeville</strong>
+                            <span>Attente : 23 min</span>
+                        </div>
+                    </div>
+                    <div class="v-line"></div>
+                    <div class="escale">
+                        <div class="dot active"></div>
+                        <div class="escale-info">
+                            <strong>18:36 - Bordeaux-Saint-Clair</strong>
+                            <p>Arrivée à destination</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleDetails(element) {
+            const details = element.nextElementSibling;
+            details.style.display = (details.style.display === "none") ? "block" : "none";
+        }
+    </script>
+</body>
+</html>
