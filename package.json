@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/Lynox789/Trains/issues"
   },
-  "homepage": "https://github.com/Lynox789/Trains#readme"
+  "homepage": "https://github.com/Lynox789/Trains#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.2.0"
+  }
 }

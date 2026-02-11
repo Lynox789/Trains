@@ -17,8 +17,7 @@ connexion/Database.php
 
 # Dump and exports
 /dump/
-/backups/
-*.bson
+/backups/   
 *.csv
 
 # Mongodb logs
@@ -31,6 +30,7 @@ mongod.log
 
 #In case of javascript dependencies by yarn 
 
+node_modules
 /node_modules/
 npm-debug.log*
 yarn-error.log
