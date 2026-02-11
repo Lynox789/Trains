@@ -24,7 +24,6 @@ body {
 }
 
 .container {
-    max-width: 1100px;
     margin: 0 auto;
     padding: 40px 20px;
 }
@@ -54,6 +53,12 @@ body {
     color: var(--cyan);
 }
 
+.logo img{
+    width: 5rem;
+    height: 5rem;
+}
+
+/*
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
@@ -63,7 +68,7 @@ body {
 .logo span {
     color: var(--cyan);
 }
-
+*/
 
 .btn-member {
     display: flex;

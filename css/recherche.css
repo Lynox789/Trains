@@ -207,34 +207,79 @@ body {
 .nbr_personne {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     margin-top: 20px;
     background-color: var(--glass);
     padding: 20px;
     border-radius: 20px;
-    max-width: 200px;
+    max-width: 150px;
 }
-.nbr_personne button {
-    background-color: var(--transparent);
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    font-size: 1.5rem;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-.nbr_personne button:hover {
-    background-color: var(--cyan);
-    color: var(--navy);
+.nbr_personne img{
+    width: 1.5rem;
 }
 .nbr_personne span {
-    font-size: 1.2rem;
-    color: var(--white);
-    font-weight: 600;
-    align-content: center;
+    font-size: 1.5rem;
 }
+
+
+#container-voyageurs {
+    margin-top: 15px;
+    max-height: 300px;
+    overflow-y: auto; /* Pour faire défiler s'il y a beaucoup de voyageurs */
+}
+
+.voyageur-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.voyageur-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #005b96;
+}
+
+.voyageur-body input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.adherent-section p {
+    font-size: 0.9em;
+    margin: 5px 0;
+    color: #0F172A;
+}
+
+.radio-group{
+    display: flex;
+    flex-direction: column;
+}
+.radio-group input{
+    width: 10%;
+}
+.radio-group label {
+    margin-right: 15px;
+    font-size: 0.85em;
+    color: #0F172A;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #d9534f;
+}
+
+
 
 .btn-recherche {
     margin-top: 30px;

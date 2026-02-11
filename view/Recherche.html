@@ -38,12 +38,13 @@
                     <input type="date" id="date_retour">
                 </div>
                 <h3>Combien de personne ?</h3>
-                <div class="nbr_personne">
-                    <button class="btn-nbr">-</button>
-                    <span id="nbr_personne">1</span>
-                    <button class="btn-nbr">+</button>
+                <div class="nbr_personne" id="btn-ajouter-voyageur" style="cursor: pointer;">
+                    <img src="img/Member.svg" alt="">
+                    <span id="compteur-voyageurs">0</span>
+                    <img src="img/plus.svg" alt="">
                 </div>
-                <button class="btn-recherche">Voir les trajets</button>
+                <div id="container-voyageurs"></div>
+                <a href="trajets.html"><button class="btn-recherche">Voir les trajets</button></a>
             </div>
             <div class="image">
                 <img src="img/Montagne.svg" alt="">
