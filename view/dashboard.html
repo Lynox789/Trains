@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>europe.transports | Réservation TGV</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">europe<span>.transports</span></div>
+        <nav>
+            <a href="dashboard.html">Voyager</a>
+            <a href="#">Billets</a>
+            <a href="#">Compte</a>
+            <a href="#">Contact</a>
+        </nav>
+        <button class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+    </header>
+
+    <main class="container">
+        <h1 class="Titre_principal">Rechercher une destination</h1>
+        <section class="Recherche">
+            <div class="Recherche_container">
+                <div class="Recherche_input">
+                    <input type="text" id="lieu" placeholder="Paris, Lyon, Marseille...">
+                    <button class="btn-search"><a href="Recherche.html"><img src="img/Recherche.svg" alt=""></a></button>
+                </div>
+        </section>
+
+        <section class="infinite-carousel">
+            <h2 class="carousel-title">Destinations de vacances en France</h2>
+            <div class="carousel-viewport">
+                <div class="carousel-track">
+                    <div class="slide"><img src="img/Lyon.jpg" alt="Lyon"></div>
+                    <div class="slide"><img src="img/Marseille.jpg" alt="Marseille"></div>
+                    <div class="slide"><img src="img/Lille.jpg" alt="Lille"></div>
+                    <div class="slide"><img src="img/Paris.jpg" alt="Paris"></div>
+                    <div class="slide"><img src="img/Bordeaux.jpg" alt="Bordeaux"></div>
+                    
+                    <div class="slide"><img src="img/Lyon.jpg" alt="Lyon"></div>
+                    <div class="slide"><img src="img/Marseille.jpg" alt="Marseille"></div>
+                    <div class="slide"><img src="img/Lille.jpg" alt="Lille"></div>
+                    <div class="slide"><img src="img/Paris.jpg" alt="Paris"></div>
+                    <div class="slide"><img src="img/Bordeaux.jpg" alt="Bordeaux"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="price-calendar">
+            <h3>Calendrier des prix (Janvier)</h3>
+            <div class="calendar-grid">
+                <div class="day"><span>05</span><p>52€</p></div>
+                <div class="day"><span>06</span><p>48€</p></div>
+                <div class="day active"><span>07</span><p>45€</p></div>
+                <div class="day"><span>08</span><p>55€</p></div>
+                <div class="day"><span>09</span><p>42€</p></div>
+                <div class="day"><span>10</span><p>60€</p></div>
+                <div class="day active"><span>15</span><p>49€</p></div>
+            </div>
+        </section>
+
+        <div class="booking-layout">
+            <section class="options-container">
+                <h2>Personnalisez votre trajet</h2>
+                <div class="option-card">
+                    <div class="opt-info">
+                        <strong>Place tranquille</strong>
+                        <span>Confort acoustique supérieur</span>
+                    </div>
+                    <div class="opt-price">+3,00 €</div>
+                    <button class="btn-add">Ajouter</button>
+                </div>
+                <div class="option-card">
+                    <div class="opt-info">
+                        <strong>Prise électrique</strong>
+                        <span>Restez connecté tout le trajet</span>
+                    </div>
+                    <div class="opt-price">+2,00 €</div>
+                    <button class="btn-add">Ajouter</button>
+                </div>
+                <div class="option-card">
+                    <div class="opt-info">
+                        <strong>Bagage supplémentaire</strong>
+                        <span>Un bagage volumineux inclus</span>
+                    </div>
+                    <div class="opt-price">+5,00 €</div>
+                    <button class="btn-add">Ajouter</button>
+                </div>
+            </section>
+
+            <aside class="cart-sidebar">
+                <h3>Votre Panier</h3>
+                <div class="cart-items">
+                    <div class="item"><span>Aller (07/01)</span><strong>45,00 €</strong></div>
+                    <div class="item"><span>Retour (15/01)</span><strong>49,00 €</strong></div>
+                    <div class="item promo"><span>Remise Adhérent</span><strong>-10,00 €</strong></div>
+                </div>
+                <div class="total-section">
+                    <div class="total-label">TOTAL</div>
+                    <div class="total-price">84,00 €</div>
+                </div>
+                <button class="btn-checkout">Valider mon panier</button>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>
