@@ -18,7 +18,6 @@ connexion/Database.php
 # Dump and exports
 /dump/
 /backups/
-*.json
 *.bson
 *.csv
 
@@ -29,10 +28,6 @@ mongod.log
 .env
 .env.local
 .env.*.local
-
-#In case of use of composer module
-/vendor/
-composer.phar
 
 #In case of javascript dependencies by yarn 
 
