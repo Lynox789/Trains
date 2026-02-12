@@ -30,60 +30,10 @@
             <div class="day"><span>Dim. 15 fév.</span><p>49€</p></div>
         </div>
 
-        <div class="trajets-list">
-            <div class="trajet-card">
-                <div class="trajet-summary" onclick="toggleDetails(this)">
-                    <div class="time-info">
-                        <div class="departure">
-                            <strong>14:40</strong> <span>Paris Saint-Lazare</span> </div>
-                        <div class="duration-line">
-                            <span>3h56</span>
-                            <div class="line"></div>
-                            <span>Direct</span>
-                        </div>
-                        <div class="arrival">
-                            <strong>18:36</strong> <span>Bordeaux-Saint-Clair</span> </div>
-                    </div>
-                    <div class="price-section">
-                        <p class="opt-price">45.00€</p>
-                        <button class="btn-add">Choisir</button>
-                    </div>
-                </div>
-
-                <div class="trajet-details" style="display: none;">
-                    <div class="escale">
-                        <div class="dot active"></div>
-                        <div class="escale-info">
-                            <strong>14:40 - Paris Saint-Lazare</strong>
-                            <p>Train TER N°3117 - Vers Le Havre</p>
-                        </div>
-                    </div>
-                    <div class="v-line"></div>
-                    <div class="escale">
-                        <div class="dot"></div>
-                        <div class="escale-info">
-                            <strong>16:33 - Bréauté - Beuzeville</strong>
-                            <span>Attente : 23 min</span>
-                        </div>
-                    </div>
-                    <div class="v-line"></div>
-                    <div class="escale">
-                        <div class="dot active"></div>
-                        <div class="escale-info">
-                            <strong>18:36 - Bordeaux-Saint-Clair</strong>
-                            <p>Arrivée à destination</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="trajets-list" id="trajets-container">
         </div>
     </main>
 
-    <script>
-        function toggleDetails(element) {
-            const details = element.nextElementSibling;
-            details.style.display = (details.style.display === "none") ? "block" : "none";
-        }
-    </script>
+    <script src="../js/trajets_fetch.js"></script>
 </body>
 </html>

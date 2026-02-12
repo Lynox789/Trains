@@ -43,18 +43,6 @@ body {
     height: 5rem;
 }
 
-/*
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.logo span {
-    color: var(--cyan);
-}
-*/
-
 .btn-member {
     display: flex;
     align-items: center;
@@ -73,11 +61,7 @@ body {
     color: var(--navy);
 }
 
-.btn-member img {
-    color: var(--white);
-
-}
-
+/* LAYOUT */
 .container {
     max-width: 1000px;
     margin: 0 auto;
@@ -124,6 +108,7 @@ body {
     border-radius: 20px;
     margin-bottom: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
 }
 
 .trajet-summary {
@@ -170,33 +155,67 @@ body {
 
 /* ESCALES */
 .trajet-details {
-    padding: 20px;
+    position: relative;
+    padding: 20px 20px 20px 70px; /* Espace pour la ligne à gauche */
     background: rgba(0, 0, 0, 0.2);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.escale {
-    display: flex;
-    gap: 15px;
+/* La barre verticale continue */
+.trajet-details::before {
+    content: '';
+    position: absolute;
+    left: 40px; /* Position de la ligne */
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--cyan);
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+}
+
+.escale-etape {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+/* Le point lumineux sur la ligne */
+.dot.active {
+    position: absolute;
+    left: -35px; /* Ajusté pour centrer sur la barre à 40px */
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.info-etape strong {
+    font-size: 1.1rem;
+    color: var(--white);
+    display: block;
     margin-bottom: 5px;
 }
 
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #475569;
-    margin-top: 6px;
+/* Segment d'attente le long de la ligne */
+.segment-attente {
+    margin: -15px 0 20px 0;
 }
 
-.dot.active {
-    background: var(--cyan);
-    box-shadow: 0 0 8px var(--cyan);
+.label-attente {
+    color: var(--cyan);
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.8;
 }
 
-.v-line {
-    width: 2px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    margin-left: 4px;
+/* Encadré pour les infos (Train TER, etc.) */
+.train-box {
+    background: var(--glass);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    max-width: 80%;
 }
