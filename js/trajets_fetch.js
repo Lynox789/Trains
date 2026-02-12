@@ -1,6 +1,10 @@
-async function chargerTrajets() {
+async function chargerTrajets(dateSelectionnee = null) {
     try {
-        const response = await fetch('/api/trajets');
+        let url = '/api/trajets';
+        if(dateSelectionnee){
+            url += `?date=${encodeURIComponent(dateSelectionnee)}`;
+        }
+        const response = await fetch(url);
         const trajets = await response.json();
 
         const container = document.getElementById('trajets-container');
@@ -33,7 +37,16 @@ async function chargerTrajets() {
                     }
                 });
             } else {
-                escalesHTML = '<p style="padding:10px;">Trajet direct sans escale.</p>';
+                escalesHTML = `
+                    <div class="escale-etape">
+                        <div class="dot active"></div>
+                        <div class="info-etape"><strong>${trajet.heure_depart} - ${trajet.gare_depart}</strong></div>
+                    </div>
+                    <div class="segment-attente"><span class="label-attente">Trajet direct</span></div>
+                    <div class="escale-etape">
+                        <div class="dot active"></div>
+                        <div class="info-etape"><strong>${trajet.heure_arrivee} - ${trajet.gare_arrivee}</strong></div>
+                    </div>`;            
             }
 
             card.innerHTML = `
@@ -68,6 +81,48 @@ async function chargerTrajets() {
     }
 }
 
+async function chargerCalendrier() {
+    try {
+        // On récupère les prix par jour
+        const response = await fetch('/api/calendrier-prix');
+        const jours = await response.json();
+
+        const container = document.querySelector('.calendar-grid');
+        if (!container) return; // Sécurité si l'élément n'existe pas
+        
+        container.innerHTML = '';
+
+        // On cherche le prix le moins cher pour l'US 1.2
+        const prixMin = Math.min(...jours.map(j => j.prix));
+
+        jours.forEach(jour => {
+            const dayDiv = document.createElement('div');
+            // On ajoute la classe 'active' si c'est le premier jour par exemple
+            dayDiv.className = 'day'; 
+            
+            const isCheapest = jour.prix === prixMin;
+
+            dayDiv.innerHTML = `
+                <span>${jour.date}</span>
+                <p class="${isCheapest ? 'cheapest' : ''}">${jour.prix}€</p>
+            `;
+
+            // au clic n filtre les trajets de l'EPIC 1
+            dayDiv.onclick = () => {
+                document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+                dayDiv.classList.add('active');
+                
+                // On appelle la fonction de l'EPIC 1 avec la date choisie
+                chargerTrajets(jour.date);
+            };
+
+            container.appendChild(dayDiv);
+        });
+    } catch (err) {
+        console.error("Erreur calendrier:", err);
+    }
+}
+
 // Fonction pour l'affichage des détails (gardée de ton HTML d'origine)
 function toggleDetails(element) {
     const details = element.nextElementSibling;
@@ -75,4 +130,7 @@ function toggleDetails(element) {
 }
 
 // Lancement automatique
-window.onload = chargerTrajets;
+window.onload = () => {
+    chargerCalendrier();
+    chargerTrajets();
+}

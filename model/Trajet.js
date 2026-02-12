@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // On définit les champs attendus
 const trajetSchema = new mongoose.Schema({
+    date_depart: {type: String, require: true},
     gare_depart: { type: String, required: true }, 
     gare_arrivee: { type: String, required: true }, 
     heure_depart: { type: String, required: true }, 
