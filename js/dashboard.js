@@ -3,7 +3,10 @@ const suggestionsBox = document.getElementById('suggestions-liste');
 const searchWrapper = document.querySelector('.search-wrapper');
 const body = document.body;
 const overlay = document.getElementById('focus-overlay');
+const btnSearch = document.querySelector('.btn-search')
 
+
+btnSearch.disabled = true;
 
 inputLieu.addEventListener('input', async () =>{
     activerFocusMode();
@@ -11,6 +14,7 @@ inputLieu.addEventListener('input', async () =>{
     //ecouter la frappe de l'utilisateur
     const query = inputLieu.value;
 
+    btnSearch.disabled = true;
     
     if(query.length < 2){
         searchWrapper.classList.remove('open');
@@ -34,6 +38,7 @@ inputLieu.addEventListener('input', async () =>{
                 // au clic sur une suggestion
                 div.onclick = () => {
                     inputLieu.value = gare;
+                    btnSearch.disabled = false;
                     quitterFocusMode();
                 };
                 suggestionsBox.appendChild(div);
@@ -65,6 +70,7 @@ document.getElementById('focus-overlay').addEventListener('click', () => {
 
 // Redirection vers recherche.html avec la valeur pré-remplie
 function allerVersRecherche() {
+    if (btnSearch.disabled) return;
     const destination = inputLieu.value;
     // On envoie la destination dans l'URL vers la page recherche.html
     window.location.href = `recherche.html?prefill_arrivee=${encodeURIComponent(destination)}`;

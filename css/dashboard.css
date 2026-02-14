@@ -160,6 +160,17 @@ body.search-active .search-wrapper {
     height: 20px;
 }
 
+.btn-search:disabled {
+    opacity: 0.5; 
+    cursor: not-allowed; 
+    background: #ccc; 
+    transform: none ; 
+}
+
+.btn-search:disabled img {
+    opacity: 0.5;
+}
+
 /* La Liste de Suggestions */
 .suggestions-box {
     display: none; /* Caché par défaut */
