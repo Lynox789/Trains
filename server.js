@@ -69,6 +69,24 @@ app.get('/api/calendrier-prix', async (req, res) => {
     }
 });
 
+app.get('/api/gares', async (req,res) => {
+  try{
+    const { q } = req.query; // q = ce que l'utilisateur tape 
+
+    if(!q) return res.json([]);
+
+    //On utilise .distinct() pour ne pas avoir 50 fois "Paris" si on a 50 trajets vers Paris
+    const gares = await Trajet.find({
+      gare_arrivee: {$regex: new RegExp(q, "i")}
+    }).distinct('gare_arrivee');
+
+    // limite à 5 resultat
+    res.json(gares.slice(0,5));
+  }catch(err){
+    res.status(500).json({error: err.message});
+  }
+});
+
 //lancement serveur sur le port 3000
 app.listen(port, () => {
   console.log(`Server initialized on http://localhost:${port}`);

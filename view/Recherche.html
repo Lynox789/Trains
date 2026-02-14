@@ -54,4 +54,14 @@
 </body>
 <script src="../js/nbr_passenger.js"></script>
 <script src="../js/reverse_place.js"></script>
+<script>
+    window.onload = () => {
+        const params = new URLSearchParams(window.location.search);
+        const prefill = params.get('prefill_arrivee');
+
+        if(prefill){
+            document.getElementById('lieu_arrivee').value = prefill;
+        }
+    };
+</script>
 </html>

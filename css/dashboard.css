@@ -103,36 +103,125 @@ body {
 
 /* SEARCH */
 
-.Recherche_input {
-    text-align: center;
-    margin-bottom: 40px;
+.search-wrapper {
+    display: flex;
+    flex-direction: column; 
+    width: 80%; 
+    margin: 0 auto; 
+    position: relative;
+    z-index: 1000; 
+    transition: transform 0.3s ease;
 }
 
-.Recherche_input input {
-    
-    width: 80%;
-    padding: 20px 20px;
+body.search-active .search-wrapper {
+    transform: scale(1.05);
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
     background: var(--glass);
-    border: none;
     border-radius: 20px;
-    color: var(--white);
-    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
-}
-.Recherche_input input:focus {
-    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.input-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    padding: 15px;
+    font-size: 1.1rem;
+    outline: none;
+}
+
+/* Le bouton Loupe */
 .btn-search {
-    transform: translateX(-60px) translateY(15px);
+    transform: none; 
     background: var(--cyan);
     border: none;
     border-radius: 50%;
-    font-weight: 800;
-    padding: 15px;
+    padding: 12px;
     cursor: pointer;
-    transition: transform 0.2s;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
 }
+
+.btn-search:hover {
+    background: #00b8e6;
+}
+
+.btn-search img {
+    width: 20px;
+    height: 20px;
+}
+
+/* La Liste de Suggestions */
+.suggestions-box {
+    display: none; /* Caché par défaut */
+    flex-direction: column;
+    background: rgba(15, 23, 42, 0.95); 
+    border-radius: 0 0 20px 20px; 
+    margin-top: -2px; 
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none;
+}
+
+/* Quand la liste est ouverte (classe ajoutée par JS) */
+.search-wrapper.open .input-row {
+    border-radius: 20px 20px 0 0; 
+    background: rgba(15, 23, 42, 0.95); 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-wrapper.open .suggestions-box {
+    display: flex; 
+}
+
+/* Les éléments de la liste */
+.suggestion-item {
+    padding: 15px 20px;
+    color: var(--white);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s;
+    text-align: left;
+}
+
+.suggestion-item:hover {
+    background: var(--cyan);
+    color: var(--navy);
+}
+
+/* Le Voile Flou (Overlay) */
+#focus-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7); 
+    backdrop-filter: blur(8px); 
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 900;
+}
+
+body.search-active #focus-overlay {
+    opacity: 1;
+    pointer-events: all;
+}
+
+body.search-active {
+    overflow: hidden; /* Empêche de scroller la page derrière */
+}
+
 
 /* Carrousel */
 .infinite-carousel {
