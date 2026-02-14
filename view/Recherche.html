@@ -26,12 +26,14 @@
             <div class="Recherche_container">
                 <h1 class="Titre_principal">Rechercher une destination</h1>
 
-                <div class="lieu_depart">
-                    <input type="text" id="lieu_depart" placeholder="Lieu de départ">
+                <div class="lieu_depart input-wrapper">
+                    <input type="text" id="lieu_depart" placeholder="Lieu de départ" autocomplete="off">
+                    <div id="suggestions-depart" class="suggestions-box"></div>
                 </div>
-                <div class="lieu_arrivee">
-                    <input type="text" id="lieu_arrivee" placeholder="Lieu d'arrivée">
+                <div class="lieu_arrivee input-wrapper">
+                    <input type="text" id="lieu_arrivee" placeholder="Lieu d'arrivée" autocomplete="off">
                     <button id="btn_reverse"><img src="img/deuxFleche.svg" alt=""></button>
+                    <div id="suggestions-arrivee" class="suggestions-box"></div>
                 </div>
                 <div class="date">
                     <input type="date" id="date_depart">
@@ -44,7 +46,7 @@
                     <img src="img/plus.svg" alt="">
                 </div>
                 <div id="container-voyageurs"></div>
-                <a href="trajets.html"><button class="btn-recherche">Voir les trajets</button></a>
+                <button class="btn-recherche" onclick="recherche()">Voir les trajets</button>
             </div>
             <div class="image">
                 <img src="img/Montagne.svg" alt="">
@@ -54,6 +56,7 @@
 </body>
 <script src="../js/nbr_passenger.js"></script>
 <script src="../js/reverse_place.js"></script>
+<script src="../js/recherche.js"></script>
 <script>
     window.onload = () => {
         const params = new URLSearchParams(window.location.search);
