@@ -54,6 +54,7 @@ function formaterDatePourBDD(dateInput) {
     
     const date = new Date(dateInput);
     const options = { weekday: 'short', day: 'numeric', month: 'short' };
+    // Ex: "mer. 11 févr."
     let dateFormatee = date.toLocaleDateString('fr-FR', options);
     dateFormatee = dateFormatee.charAt(0).toUpperCase() + dateFormatee.slice(1);
     return dateFormatee.replace('févr.', 'fév.').replace('janv.', 'janv.'); 
@@ -65,8 +66,22 @@ function rechercher() {
     const dateAllerRaw = document.getElementById('date_depart').value;
     const dateRetourRaw = document.getElementById('date_retour').value;
 
+    if(!depart || !arrivee || !dateAllerRaw) {
+        alert("Veuillez remplir le départ, l'arrivée et la date d'aller.");
+        return;
+    }
+
     const dateAller = formaterDatePourBDD(dateAllerRaw);
-    const dateRetour = formaterDatePourBDD(dateRetourRaw);
+    const dateRetour = dateRetourRaw ? formaterDatePourBDD(dateRetourRaw) : "";
 
     window.location.href = `trajets.html?depart=${encodeURIComponent(depart)}&arrivee=${encodeURIComponent(arrivee)}&date=${encodeURIComponent(dateAller)}&retour=${encodeURIComponent(dateRetour)}&etape=aller`;
 }
+
+window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    const prefill = params.get('prefill_arrivee');
+
+    if(prefill){
+        document.getElementById('lieu_arrivee').value = prefill;
+    }
+};

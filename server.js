@@ -23,11 +23,17 @@ mongoose.connect(dbUrl)
 
 app.get('/api/trajets', async (req, res) => {
   try{
-    const {date} = req.query; // on récupère la date passé dans l'URL
+    const {date, gare_depart, gare_arrivee} = req.query; // on récupère la date passé dans l'URL
     let query = {};
     // trouver tous les trejets
-    if(date){
+    if(date && date !== 'undefined' && date !== '') {
       query.date_depart = date; // si une date est fournie, on filtre
+    }
+    if(gare_depart && gare_depart !== 'undefined' && gare_depart !== '') {
+      query.gare_depart = {$regex: new RegExp(gare_depart, "i")};
+    }
+    if(gare_arrivee && gare_arrivee !== 'undefined' && gare_arrivee !== '') {
+      query.gare_arrivee = {$regex: new RegExp(gare_arrivee, "i")};
     }
 
     const trajets = await Trajet.find(query);
@@ -40,30 +46,41 @@ app.get('/api/trajets', async (req, res) => {
 
 app.get('/api/calendrier-prix', async (req, res) => {
     try {
-        // Récupère tous les trajets pour calculer les prix par date
-        const trajets = await Trajet.find();
-        
-        // Objet temporaire pour stocker le prix minimum par jour
-        const mapPrix = {};
 
-        trajets.forEach(t => {
-            // On utilise le champ date_depart de ton schéma MongoDB
-            const d = t.date_depart; 
-            if (d) {
-                // Si la date n'existe pas encore ou si ce trajet est moins cher
-                if (!mapPrix[d] || t.prix_base < mapPrix[d]) {
-                    mapPrix[d] = t.prix_base;
-                }
-            }
-        });
+      const {gare_depart, gare_arrivee} = req.query;
 
-        // On transforme l'objet en tableau pour le JavaScript du navigateur
-        const calendrier = Object.keys(mapPrix).map(date => ({
-            date: date,
-            prix: mapPrix[date]
-        }));
+      let query = {};
 
-        return res.json(calendrier);
+      if(gare_depart) {
+        query.gare_depart = {$regex: new RegExp(gare_depart, "i")};
+      }
+      if(gare_arrivee) {
+        query.gare_arrivee = {$regex: new RegExp(gare_arrivee, "i")};
+      }
+
+      const trajets = await Trajet.find(query);
+      
+      // Objet temporaire pour stocker le prix minimum par jour
+      const mapPrix = {};
+
+      trajets.forEach(t => {
+          const d = t.date_depart; 
+          if (d) {
+              // Si la date n'existe pas encore ou si ce trajet est moins cher
+              if (!mapPrix[d] || t.prix_base < mapPrix[d]) {
+                  mapPrix[d] = t.prix_base;
+              }
+          }
+      });
+
+      // On transforme l'objet en tableau pour le JavaScript du navigateur
+      const calendrier = Object.keys(mapPrix).map(date => ({
+          date: date,
+          prix: mapPrix[date]
+      }));
+
+      return res.json(calendrier);
+
     } catch (err) {
         return res.status(500).json({ message: "Erreur calendrier", error: err });
     }

@@ -46,7 +46,7 @@
                     <img src="img/plus.svg" alt="">
                 </div>
                 <div id="container-voyageurs"></div>
-                <button class="btn-recherche" onclick="recherche()">Voir les trajets</button>
+                <button class="btn-recherche" onclick="rechercher()">Voir les trajets</button>
             </div>
             <div class="image">
                 <img src="img/Montagne.svg" alt="">
@@ -57,14 +57,4 @@
 <script src="../js/nbr_passenger.js"></script>
 <script src="../js/reverse_place.js"></script>
 <script src="../js/recherche.js"></script>
-<script>
-    window.onload = () => {
-        const params = new URLSearchParams(window.location.search);
-        const prefill = params.get('prefill_arrivee');
-
-        if(prefill){
-            document.getElementById('lieu_arrivee').value = prefill;
-        }
-    };
-</script>
 </html>
