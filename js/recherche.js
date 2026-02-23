@@ -96,6 +96,25 @@ function rechercher() {
     const dateAller = formaterDatePourBDD(dateAllerRaw);
     const dateRetour = dateRetourRaw ? formaterDatePourBDD(dateRetourRaw) : "";
 
+    const voyageurs = [];
+    const cartesVoyageur = document.querySelectorAll('.voyageur-card');
+    
+    cartesVoyageur.forEach(carte => {
+        const ageInput = carte.querySelector('input[type="number"]');
+        voyageurs.push({
+            age: ageInput && ageInput.value ? parseInt(ageInput.value) : 30,
+        });
+    });
+
+    //si l'utilisateur n'a ajouter aucun voyageur, on ajoute un voyageur par défaut pour éviter les erreurs dans la page de résultats 
+    if(voyageurs.length === 0) {
+        voyageurs.push({ age: 30});
+    }
+
+    //On sauvegard le tableau des voyageur dans le mémoire du navigateur pour pouvoir le récupérer dans la page de résultats
+    localStorage.setItem('voyageurs', JSON.stringify(voyageurs));   
+
+    // redirection 
     window.location.href = `trajets.html?depart=${encodeURIComponent(depart)}&arrivee=${encodeURIComponent(arrivee)}&date=${encodeURIComponent(dateAller)}&retour=${encodeURIComponent(dateRetour)}&etape=aller`;
 }
 

@@ -34,6 +34,10 @@ function recupererParametres() {
     };
 }
 
+const voyageursData = JSON.parse(localStorage.getItem('voyageurs')) || [{ age: 30 }];
+const nbVoyageurs = voyageursData.length;
+
+
 async function chargerTrajets(dateSelectionnee = null) {
     const searchData = recupererParametres();
 
@@ -114,6 +118,8 @@ async function chargerTrajets(dateSelectionnee = null) {
                     </div>`;            
             }
 
+            const prixAjuste = (trajet.prix_base * nbVoyageurs).toFixed(2);
+
             card.innerHTML = `
                 <div class="trajet-summary" onclick="toggleDetails(this)">
                     <div class="time-info">
@@ -131,7 +137,7 @@ async function chargerTrajets(dateSelectionnee = null) {
                         </div>
                     </div>
                     <div class="price-section">
-                        <p class="opt-price">${trajet.prix_base}€</p>
+                        <p class="opt-price">${prixAjuste}€</p>
                         <button class="btn-add">Choisir</button>
                     </div>
                 </div>
@@ -163,6 +169,10 @@ function choisirTrajet(trajet, searchData) {
         <div class="recap-line"><span class="recap-label">Date</span><span class="recap-value">${trajet.date_depart}</span></div>
         <div class="recap-line"><span class="recap-label">Départ</span><span class="recap-value">${trajet.heure_depart} - ${trajet.gare_depart}</span></div>
         <div class="recap-line"><span class="recap-label">Arrivée</span><span class="recap-value">${trajet.heure_arrivee} - ${trajet.gare_arrivee}</span></div>
+        
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+        <div class="recap-line"><span class="recap-label">Voyageurs</span><span class="recap-value" style="color: var(--cyan);">${nbVoyageurs} personne(s)</span></div>
+        <div class="recap-line"><span class="recap-label">Prix unitaire</span><span class="recap-value">${trajet.prix_base} € / pers.</span></div>
     `;
     
     // on décoche toutes les options précédentes
@@ -182,12 +192,13 @@ function choisirTrajet(trajet, searchData) {
 function calculerPrixTotalOptions() {
     if(!trajetEnCoursDeSelection) return;
 
-    let prixTotal = trajetEnCoursDeSelection.prix_base;
+    let prixTotal = trajetEnCoursDeSelection.prix_base * nbVoyageurs; // Prix de base multiplié par le nombre de voyageurs
 
     // on parcourt toutes les checkbox cochées pour ajouter leur prix
 
     document.querySelectorAll('#options-panel input[type="checkbox"]:checked').forEach(radio => {
-        prixTotal += parseFloat(radio.getAttribute('data-prix')) || 0;
+       let prixOption = parseFloat(radio.getAttribute('data-prix')) || 0;
+       prixTotal += (prixOption * nbVoyageurs);
     });
     // afficher du prix total dans le panneau
     document.getElementById('prix-total-options').innerText = prixTotal.toFixed(2);
@@ -308,6 +319,8 @@ async function chargerCalendrier() {
             const isCheapest = jour.prix === prixMin;
 
             const timestampJour = obtenirValeurDate(jour.date);
+            const prixAfficheCal = (jour.prix * nbVoyageurs).toFixed(2); // Prix ajusté pour le nombre de voyageurs
+
             // Si on est sur la page de retour et que ce jour est avant l'aller, on bloque la sélection
             if (searchData.etape === 'retour' && timestampAller && timestampJour < timestampAller) {
                 dayDiv.innerHTML = `
@@ -321,7 +334,7 @@ async function chargerCalendrier() {
             }else {
                 dayDiv.innerHTML = `
                     <span>${jour.date}</span>
-                    <p class="${isCheapest ? 'cheapest' : ''}">${jour.prix}€</p>
+                    <p class="${isCheapest ? 'cheapest' : ''}">${prixAfficheCal}€</p>
                 `;
 
                 // au clic n filtre les trajets de l'EPIC 1

@@ -17,22 +17,6 @@ btnAjouter.addEventListener('click', () => {
         
         <div class="voyageur-body">
             <input type="number" name="age[]" placeholder="Âge" min="0" required>
-            
-            <div class="adherent-section">
-                <p>Carte de réduction (Adhérent) ?</p>
-                <div class="radio-group">
-                    <label class="radio-container">
-                        <input type="radio" value="oui" class="radio-adherent">
-                        <span class="checkmark"></span>
-                        Oui
-                    </label>
-                    <label class="radio-container">
-                        <input type="radio" value="non" class="radio-adherent" checked>
-                        <span class="checkmark"></span>
-                        Non
-                    </label>
-                </div>
-            </div>
         </div>
     `;
 
