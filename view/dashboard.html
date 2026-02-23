@@ -23,10 +23,16 @@
         <h1 class="Titre_principal">Rechercher une destination</h1>
         <section class="Recherche">
             <div class="Recherche_container">
-                <div class="Recherche_input">
-                    <input type="text" id="lieu" placeholder="Paris, Lyon, Marseille...">
-                    <button class="btn-search"><a href="Recherche.html"><img src="img/Recherche.svg" alt=""></a></button>
+                <div class="search-wrapper">
+                    <div class="input-row">
+                        <input type="text" id="lieu" placeholder="Paris, Lyon, Marseille..." autocomplete="off">
+                        <button class="btn-search" onclick="allerVersRecherche()">
+                            <img src="img/Recherche.svg" alt="">
+                        </button>
+                    </div>
+                    <div id="suggestions-liste" class="suggestions-box"></div>
                 </div>
+            </div>
         </section>
 
         <section class="infinite-carousel">
@@ -105,5 +111,7 @@
             </aside>
         </div>
     </main>
+    <div id="focus-overlay"></div>
 </body>
+<script src="../js/dashboard.js"></script>
 </html>

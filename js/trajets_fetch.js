@@ -1,14 +1,54 @@
+function recupererParametres() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        depart: params.get('depart'),
+        arrivee: params.get('arrivee'),
+        date: params.get('date'),
+        retour: params.get('retour'),
+        etape: params.get('etape') || 'aller' // Par défaut, on affiche l'aller
+    };
+}
+
 async function chargerTrajets(dateSelectionnee = null) {
+    const searchData = recupererParametres();
+
+    const dateQuery = dateSelectionnee || searchData.date;
+
+    if (dateSelectionnee && dateSelectionnee !== searchData.date) {
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set('date', dateSelectionnee);
+        window.history.pushState({}, '', newUrl);
+    }
+    const titre = document.getElementById('titre-trajet');
+    if(titre){
+        const mode = searchData.etape === 'aller' ? 'Aller' : 'Retour';
+        titre.innerHTML = `${mode} : ${searchData.depart} <span style= "color:var(--cyan)">➔</span> ${searchData.arrivee}`;
+    }
+
     try {
-        let url = '/api/trajets';
-        if(dateSelectionnee){
-            url += `?date=${encodeURIComponent(dateSelectionnee)}`;
+        // On construit l'URL de l'API en fonction de la date sélectionnée
+        let apiUrl = `/api/trajets?date=${encodeURIComponent(dateQuery)}`;
+        if(searchData.depart) {
+            apiUrl += `&gare_depart=${encodeURIComponent(searchData.depart)}`;
         }
-        const response = await fetch(url);
+        if(searchData.arrivee) {
+            apiUrl += `&gare_arrivee=${encodeURIComponent(searchData.arrivee)}`;
+        }
+        
+        const response = await fetch(apiUrl);
         const trajets = await response.json();
 
         const container = document.getElementById('trajets-container');
         container.innerHTML = ''; // On vide le conteneur
+
+        if(trajets.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: white;">
+                    <h2> Aucun train le ${dateQuery} </h2>
+                    <p> Essayez une autre date ou vérifiez les gares de départ/arrivée. </p>
+                </div>`;
+            return;
+        }
 
         trajets.forEach(trajet => {
             const card = document.createElement('div');
@@ -74,6 +114,10 @@ async function chargerTrajets(dateSelectionnee = null) {
                     ${escalesHTML}
                 </div>
             `;
+            card.querySelector('.btn-add').onclick = (e) => {
+                e.stopPropagation(); // Empêche le toggle des détails
+                choisirTrajet(trajet, searchData);
+            };
             container.appendChild(card);
         });
     } catch (err) {
@@ -81,17 +125,61 @@ async function chargerTrajets(dateSelectionnee = null) {
     }
 }
 
+function choisirTrajet(trajet, searchData) {
+    const billet = {
+        id: trajet._id,
+        depart: trajet.gare_depart,
+        arrivee: trajet.gare_arrivee,
+        date: trajet.date_depart,
+        heure_depart: trajet.heure_depart,
+        heure_arrivee: trajet.heure_arrivee,
+        prix: trajet.prix_base,
+        type: searchData.etape
+    };
+    localStorage.setItem(`panier_${searchData.etape}`, JSON.stringify(billet));
+
+    if(searchData.etape === 'aller' && searchData.retour && searchData.retour !== 'undefined' && searchData.retour !== '') {
+        // Rediriger vers la même page mais pour le retour
+        window.location.href = `trajets.html?depart=${encodeURIComponent(searchData.arrivee)}&arrivee=${encodeURIComponent(searchData.depart)}&date=${encodeURIComponent(searchData.retour)}&etape=retour`;
+    } else {
+        alert("Trajet ajouté au panier !");
+        // Rediriger vers le panier
+        // window.location.href = 'panier.html';
+    }
+}
+
 async function chargerCalendrier() {
+    const searchData = recupererParametres();
+
     try {
+        // On envoie aussi les gares au calendrier pour n'avoir que les prix pertinents
+        let url = `/api/calendrier-prix`;
+        const params = [];
+        if(searchData.depart) {
+            params.push(`gare_depart=${encodeURIComponent(searchData.depart)}`);
+        }
+        if(searchData.arrivee) {
+            params.push(`gare_arrivee=${encodeURIComponent(searchData.arrivee)}`);
+        }
+        if(params.length > 0) {
+            url += `?${params.join('&')}`;
+        }
+        
         // On récupère les prix par jour
-        const response = await fetch('/api/calendrier-prix');
+        const response = await fetch(url);
         const jours = await response.json();
 
         const container = document.querySelector('.calendar-grid');
         if (!container) return; // Sécurité si l'élément n'existe pas
         
         container.innerHTML = '';
-
+        if (jours.length === 0) {
+            container.innerHTML = `
+                <p style="grid-column: 1/-1; text-align:center; opacity:0.7;">
+                    Aucune date disponible pour ce trajet.
+                </p>`;
+            return;
+        }
         // On cherche le prix le moins cher pour l'US 1.2
         const prixMin = Math.min(...jours.map(j => j.prix));
 
@@ -99,7 +187,11 @@ async function chargerCalendrier() {
             const dayDiv = document.createElement('div');
             // On ajoute la classe 'active' si c'est le premier jour par exemple
             dayDiv.className = 'day'; 
-            
+
+            // Si c'est la date active (celle de l'URL ou cliquée)
+            if (jour.date === searchData.date) {
+                dayDiv.classList.add('active');
+            }
             const isCheapest = jour.prix === prixMin;
 
             dayDiv.innerHTML = `
@@ -123,7 +215,7 @@ async function chargerCalendrier() {
     }
 }
 
-// Fonction pour l'affichage des détails (gardée de ton HTML d'origine)
+// Fonction pour l'affichage des détails 
 function toggleDetails(element) {
     const details = element.nextElementSibling;
     details.style.display = (details.style.display === "none") ? "block" : "none";

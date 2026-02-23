@@ -20,18 +20,11 @@
     </header>
 
     <main class="container">
-        <h1 class="Titre_principal">Trajets disponibles</h1>
+        <h1 class="Titre_principal" id="titre-trajet">Trajets disponibles</h1>
+        
+        <div class="calendar-grid"></div>
 
-        <div class="calendar-grid">
-            <div class="day active"><span>Mer. 11 fév.</span><p>45€</p></div>
-            <div class="day"><span>Jeu. 12 fév.</span><p>39€</p></div>
-            <div class="day"><span>Ven. 13 fév.</span><p>55€</p></div>
-            <div class="day"><span>Sam. 14 fév.</span><p>42€</p></div>
-            <div class="day"><span>Dim. 15 fév.</span><p>49€</p></div>
-        </div>
-
-        <div class="trajets-list" id="trajets-container">
-        </div>
+        <div class="trajets-list" id="trajets-container"></div>
     </main>
 
     <script src="../js/trajets_fetch.js"></script>
