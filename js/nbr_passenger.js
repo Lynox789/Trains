@@ -4,52 +4,63 @@ const container = document.getElementById('container-voyageurs');
 const compteur = document.getElementById('compteur-voyageurs');
 
 btnAjouter.addEventListener('click', () => {
-    nbVoyageurs++;
-    updateCompteur();
 
     // Création de la carte voyageur
     const voyageurDiv = document.createElement('div');
     voyageurDiv.className = 'voyageur-card';
-    voyageurDiv.id = `voyageur-${nbVoyageurs}`;
     
     voyageurDiv.innerHTML = `
         <div class="voyageur-header">
-            <span><img src="img/Member.svg" style="width:15px"> Voyageur ${nbVoyageurs}</span>
-            <button type="button" class="btn-delete" onclick="supprimerVoyageur(${nbVoyageurs})"><img src="img/trash.svg" style="width:15px"></button>
+            <span class="voyageur-title"><img src="img/Member.svg" style="width:15px; margin-right:8px; filter:brightness(0) invert(1);"> Voyageur</span>
+            <button type="button" class="btn-delete"><img src="img/trash.svg" style="width:18px;"></button>
         </div>
         
         <div class="voyageur-body">
-            <input type="number" name="age[]" placeholder="Âge" min="0">
+            <input type="number" name="age[]" placeholder="Âge" min="0" required>
             
             <div class="adherent-section">
-                <p>Est-il adhérent ?</p>
+                <p>Carte de réduction (Adhérent) ?</p>
                 <div class="radio-group">
-                    <div>
-                        <label> Oui </label>
-                        <input type="radio" name="adherent_${nbVoyageurs}" value="oui">
-                    </div>
-                    
-                    <div>
-                        <label> Non </label>
-                        <input type="radio" name="adherent_${nbVoyageurs}" value="non" checked>
-                    </div>
-                    </div>
+                    <label class="radio-container">
+                        <input type="radio" value="oui" class="radio-adherent">
+                        <span class="checkmark"></span>
+                        Oui
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" value="non" class="radio-adherent" checked>
+                        <span class="checkmark"></span>
+                        Non
+                    </label>
+                </div>
             </div>
         </div>
     `;
 
+    const btnDelete = voyageurDiv.querySelector('.btn-delete');
+    btnDelete.addEventListener('click', () => {
+        voyageurDiv.remove();
+        mettreAJourAffichage();
+    });
+    
     container.appendChild(voyageurDiv);
+    mettreAJourAffichage();
 });
 
-function supprimerVoyageur(id) {
-    const el = document.getElementById(`voyageur-${id}`);
-    if (el) {
-        el.remove();
-        nbVoyageurs--;
-        updateCompteur();
-    }
-}
+function mettreAJourAffichage() {
+    const cartes = container.querySelectorAll('.voyageur-card');
+    nbVoyageurs = cartes.length;
 
-function updateCompteur() {
     compteur.innerText = nbVoyageurs;
+
+    cartes.forEach((carte,index) => {
+        const numeroReel = index + 1;
+
+        const title = carte.querySelector('.voyageur-title');
+        title.innerHTML = `<img src="img/Member.svg" style="width:15px; margin-right:8px; filter:brightness(0) invert(1);"> Voyageur ${numeroReel}`;
+
+        const radios = carte.querySelectorAll('.radio-adherent');
+        radios.forEach(radio => {
+            radio.name = `adherent_${numeroReel}`;
+        });
+    });
 }

@@ -21,8 +21,11 @@
 
     <main class="container">
         <h1 class="Titre_principal" id="titre-trajet">Trajets disponibles</h1>
-        
-        <div class="calendar-grid"></div>
+        <div class="calendar-wrapper">
+            <button class="scroll-btn" id="scroll-left"><</button>
+            <div class="calendar-grid" id="calendar-grid"></div>
+            <button class="scroll-btn" id="scroll-right">></button>
+        </div>
 
         <div class="trajets-list" id="trajets-container"></div>
     </main>

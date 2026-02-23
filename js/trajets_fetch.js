@@ -1,3 +1,28 @@
+function obtenirValeurDate(dateStr) {
+    if (!dateStr) return 0;
+    const parts = dateStr.split(' ');
+    if (parts.length < 3) return 0; 
+    
+    const jour = parseInt(parts[1], 10);
+    const moisStr = parts[2].replace('.', '').toLowerCase();
+    
+    const moisMap = { 'janv': 0, 'fév': 1, 'mars': 2, 'avr': 3, 'mai': 4, 'juin': 5, 'juil': 6, 'août': 7, 'sept': 8, 'oct': 9, 'nov': 10, 'déc': 11 };
+    const mois = moisMap[moisStr] !== undefined ? moisMap[moisStr] : 0;
+    
+    // On récupère l'année actuelle 
+    let annee = new Date().getFullYear();
+
+    // Gestion du passage à la nouvelle année (On est en Décembre et on réserve pour Janvier)
+    const moisActuel = new Date().getMonth();
+    // Si on est en fin d'année (oct, nov, dec) et qu'on réserve pour début d'année (janv, fev, mars)
+    if (moisActuel >= 9 && mois <= 2) {
+        annee += 1; 
+    }
+    
+    return new Date(annee, mois, jour).getTime();
+}
+
+
 function recupererParametres() {
     const params = new URLSearchParams(window.location.search);
     return {
@@ -151,6 +176,14 @@ function choisirTrajet(trajet, searchData) {
 async function chargerCalendrier() {
     const searchData = recupererParametres();
 
+    let timestampAller = 0;
+    if(searchData.etape === 'retour') {
+        const panierAller = JSON.parse(localStorage.getItem('panier_aller'));
+        if(panierAller && panierAller.date) {
+            timestampAller = obtenirValeurDate(panierAller.date);
+        } 
+    } 
+
     try {
         // On envoie aussi les gares au calendrier pour n'avoir que les prix pertinents
         let url = `/api/calendrier-prix`;
@@ -175,7 +208,7 @@ async function chargerCalendrier() {
         container.innerHTML = '';
         if (jours.length === 0) {
             container.innerHTML = `
-                <p style="grid-column: 1/-1; text-align:center; opacity:0.7;">
+                <p style="text-align:center; opacity:0.7; width:100%;">
                     Aucune date disponible pour ce trajet.
                 </p>`;
             return;
@@ -194,22 +227,54 @@ async function chargerCalendrier() {
             }
             const isCheapest = jour.prix === prixMin;
 
-            dayDiv.innerHTML = `
-                <span>${jour.date}</span>
-                <p class="${isCheapest ? 'cheapest' : ''}">${jour.prix}€</p>
-            `;
+            const timestampJour = obtenirValeurDate(jour.date);
+            // Si on est sur la page de retour et que ce jour est avant l'aller, on bloque la sélection
+            if (searchData.etape === 'retour' && timestampAller && timestampJour < timestampAller) {
+                dayDiv.innerHTML = `
+                    <span>${jour.date}</span>
+                    <p style="opacity: 0.5;">--</p>
+                `;
+                // On grise la case
+                dayDiv.style.opacity = '0.3';
+                dayDiv.style.cursor = 'not-allowed';
+                dayDiv.style.pointerEvents = 'none'; // Empêche le clic
+            }else {
+                dayDiv.innerHTML = `
+                    <span>${jour.date}</span>
+                    <p class="${isCheapest ? 'cheapest' : ''}">${jour.prix}€</p>
+                `;
 
-            // au clic n filtre les trajets de l'EPIC 1
-            dayDiv.onclick = () => {
-                document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
-                dayDiv.classList.add('active');
-                
-                // On appelle la fonction de l'EPIC 1 avec la date choisie
-                chargerTrajets(jour.date);
-            };
-
+                // au clic n filtre les trajets de l'EPIC 1
+                dayDiv.onclick = () => {
+                    document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+                    dayDiv.classList.add('active');
+                    
+                    // On appelle la fonction de l'EPIC 1 avec la date choisie
+                    chargerTrajets(jour.date);
+                };
+            }
             container.appendChild(dayDiv);
         });
+
+        // gestion des boutons de scroll du calendrier
+        setTimeout(() => { // Timeout pour s'assurer que le DOM est prêt
+            const activeDay = document.querySelector('.day.active');
+            if(activeDay) {
+                // block: 'nearest' et inline: 'center' permet de mettre la case au milieu du carrousel
+                activeDay.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+            }
+        }, 100);
+        // Scroll manuel avec les boutons
+        const btnLeft = document.getElementById('scroll-left');
+        const btnRight = document.getElementById('scroll-right');
+        if(btnLeft && btnRight) {
+            btnLeft.onclick = () => {
+                container.scrollBy({left: -300, behavior: 'smooth'});
+            };
+            btnRight.onclick = () => {
+                container.scrollBy({left: 300, behavior: 'smooth'});
+            };
+        }
     } catch (err) {
         console.error("Erreur calendrier:", err);
     }

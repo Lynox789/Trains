@@ -4,9 +4,8 @@ const Trajet = require('./model/Trajet');
 
 const dbUrl = process.env.MONGO_URI;
 
-
+// LES TRAJETS MANUELS
 const trajetsManuels = [
-    // Mercredi 11 : Le trajet avec escales complexes
     {
         gare_depart: "Paris Saint-Lazare",
         gare_arrivee: "La Cour À Quatre",
@@ -22,7 +21,6 @@ const trajetsManuels = [
             { type: 'gare', gare: "La Cour À Quatre", heure: "18:36", info: "Arrivée à destination" }
         ]
     },
-    // Jeudi 12 : Le trajet pas cher
     {
         gare_depart: "Paris Saint-Lazare",
         gare_arrivee: "La Cour À Quatre",
@@ -34,18 +32,34 @@ const trajetsManuels = [
     }
 ];
 
+// GÉNÉRATION DYNAMIQUE DES DATES
 
-// Les dates sur lesquelles on veut des trains
-const dates = [
-    "Mer. 11 fév.", 
-    "Jeu. 12 fév.", 
-    "Ven. 13 fév.", 
-    "Sam. 14 fév.", 
-    "Dim. 15 fév."
-];
+// Fonction qui génère automatiquement les X prochains jours au format exact de la BDD
+function genererDates(nombreDeJours) {
+    const datesGenerees = [];
+    // On commence au 11 février 2026 (Mois '1' car Janvier = 0 )
+    let dateDeBase = new Date(2026, 1, 11); 
 
-// Les grandes lignes (Départ <-> Arrivée)
-// On définit une durée approximative pour calculer l'heure d'arrivée
+    for (let i = 0; i < nombreDeJours; i++) {
+        const dateCourante = new Date(dateDeBase);
+        dateCourante.setDate(dateDeBase.getDate() + i);
+
+        // Formatage identique au frontend
+        const options = { weekday: 'short', day: 'numeric', month: 'short' };
+        let dateFormatee = dateCourante.toLocaleDateString('fr-FR', options);
+        dateFormatee = dateFormatee.charAt(0).toUpperCase() + dateFormatee.slice(1);
+        dateFormatee = dateFormatee.replace('févr', 'fév').replace('janv', 'janv').replace('juil', 'juil');
+        
+        datesGenerees.push(dateFormatee);
+    }
+    return datesGenerees;
+}
+
+// CHOISIR LE NOMBRE DE JOURS (Ex: 30 jours, soit 1 mois de trajets)
+const dates = genererDates(30); 
+
+
+// LES GRANDES LIGNES
 const lignes = [
     { dep: "Paris Gare de Lyon", arr: "Lyon Part-Dieu", duree: 2, prixMin: 40, prixMax: 90 },
     { dep: "Paris Montparnasse", arr: "Bordeaux Saint-Jean", duree: 2.5, prixMin: 50, prixMax: 110 },
@@ -54,34 +68,26 @@ const lignes = [
     { dep: "Paris Montparnasse", arr: "Nantes", duree: 2, prixMin: 45, prixMax: 85 }
 ];
 
-// Petite fonction pour ajouter des heures (ex: 14h + 2h = 16h)
 function calculerArrivee(heureDepart, dureeTrajet) {
     let [h, m] = heureDepart.split(':').map(Number);
-    
-    // On ajoute la durée + un peu d'aléatoire (0 à 15 min) pour le réalisme
     let ajoutMinutes = (dureeTrajet * 60) + Math.floor(Math.random() * 15);
-    
     let totalMinutes = (h * 60) + m + ajoutMinutes;
-    
     let hArr = Math.floor(totalMinutes / 60) % 24;
     let mArr = Math.floor(totalMinutes % 60);
-
     return `${hArr.toString().padStart(2, '0')}:${mArr.toString().padStart(2, '0')}`;
 }
 
-// Fonction prix aléatoire
 function genererPrix(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
+// 4. BOUCLE DE GÉNÉRATION
 function genererAutreTrajets() {
     let resultats = [];
 
     dates.forEach(date => {
         lignes.forEach(ligne => {
-            
-            // --- SCENARIO 1 : SENS ALLER (Matin) ---
+            // SENS ALLER (Matin)
             resultats.push({
                 gare_depart: ligne.dep,
                 gare_arrivee: ligne.arr,
@@ -92,21 +98,20 @@ function genererAutreTrajets() {
                 escales: []
             });
 
-            // --- SCENARIO 2 : SENS ALLER (Soir) ---
+            // SENS ALLER (Soir)
             resultats.push({
                 gare_depart: ligne.dep,
                 gare_arrivee: ligne.arr,
                 date_depart: date,
                 heure_depart: "18:15",
                 heure_arrivee: calculerArrivee("18:15", ligne.duree),
-                prix_base: genererPrix(ligne.prixMin + 15, ligne.prixMax + 20), // Plus cher le soir
+                prix_base: genererPrix(ligne.prixMin + 15, ligne.prixMax + 20),
                 escales: []
             });
 
-            // --- SCENARIO 3 : SENS RETOUR (Midi) ---
-            // Important pour tester l'Aller-Retour !
+            // SENS RETOUR (Midi)
             resultats.push({
-                gare_depart: ligne.arr, // On inverse
+                gare_depart: ligne.arr, 
                 gare_arrivee: ligne.dep,
                 date_depart: date,
                 heure_depart: "12:45",
@@ -114,7 +119,8 @@ function genererAutreTrajets() {
                 prix_base: genererPrix(ligne.prixMin, ligne.prixMax),
                 escales: []
             });
-             // --- SCENARIO 4 : SENS RETOUR (Soir) ---
+
+             // SENS RETOUR (Soir)
              resultats.push({
                 gare_depart: ligne.arr, 
                 gare_arrivee: ligne.dep,
@@ -130,7 +136,7 @@ function genererAutreTrajets() {
     return resultats;
 }
 
-
+// 5. INSERTION EN BDD
 const trajetsGeneres = genererAutreTrajets();
 const seedFinal = [...trajetsManuels, ...trajetsGeneres];
 
@@ -139,18 +145,16 @@ mongoose.connect(dbUrl)
         console.log('--- DÉBUT DU SEED ---');
         console.log('Connexion MongoDB établie.');
         
-        // 1. Nettoyage
         await Trajet.deleteMany({});
         console.log('Ancienne base de données effacée.');
 
-        // 2. Insertion
         await Trajet.insertMany(seedFinal);
         
         console.log(`\nSUCCÈS ! ${seedFinal.length} trajets ont été créés.`);
         console.log("------------------------------------------------");
         console.log("Détails :");
         console.log(`- ${trajetsManuels.length} trajets manuels (La Cour À Quatre)`);
-        console.log(`- ${trajetsGeneres.length} trajets générés (Paris, Lyon, Marseille...)`);
+        console.log(`- ${trajetsGeneres.length} trajets générés sur ${dates.length} jours consécutifs.`);
         console.log("------------------------------------------------");
         
         mongoose.disconnect();
