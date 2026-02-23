@@ -20,15 +20,91 @@
     </header>
 
     <main class="container">
-        <h1 class="Titre_principal" id="titre-trajet">Trajets disponibles</h1>
-        <div class="calendar-wrapper">
-            <button class="scroll-btn" id="scroll-left"><</button>
-            <div class="calendar-grid" id="calendar-grid"></div>
-            <button class="scroll-btn" id="scroll-right">></button>
-        </div>
+        <div class="left-col">
+            <h1 class="Titre_principal" id="titre-trajet">Trajets disponibles</h1>
+            
+            <div class="calendar-wrapper">
+                <button class="scroll-btn" id="scroll-left"><</button>
+                <div class="calendar-grid" id="calendar-grid"></div>
+                <button class="scroll-btn" id="scroll-right">></button>
+            </div>
 
-        <div class="trajets-list" id="trajets-container"></div>
+            <div class="trajets-list" id="trajets-container"></div>
+        </div>
     </main>
+
+    <div class="options-overlay" id="options-panel">
+        <div class="options-panel-content">
+            
+            <div class="options-header">
+                <h2 class="Titre_principal" style="margin:0; font-size: 1.5rem;">Options du billet</h2>
+                <button id="close-options" class="btn-close">X</button>
+            </div>
+            
+            <div class="options-scrollable-area">
+                <div id="recap-train-choisi" class="recap-train">
+                    </div>
+
+                <div class="options-list">
+                    <h3>Options disponibles</h3>
+                    
+                    <label class="option-card checkbox-card">
+                        <input type="checkbox" name="option_tranquille" data-prix="3">
+                        <div class="option-info">
+                            <span class="option-title">Place tranquille</span>
+                            <span class="option-desc">Espace calme.</span>
+                        </div>
+                        <strong class="option-price">+3,00€</strong>
+                    </label>
+
+                    <label class="option-card checkbox-card">
+                        <input type="checkbox" name="option_prise" data-prix="2">
+                        <div class="option-info">
+                            <span class="option-title">Prise électrique</span>
+                            <span class="option-desc">Prise garantie.</span>
+                        </div>
+                        <strong class="option-price">+2,00€</strong>
+                    </label>
+
+                    <label class="option-card checkbox-card">
+                        <input type="checkbox" name="option_bagage" data-prix="5">
+                        <div class="option-info">
+                            <span class="option-title">Bagage supplémentaire</span>
+                            <span class="option-desc">Une valise en plus.</span>
+                        </div>
+                        <strong class="option-price">+5,00€</strong>
+                    </label>
+                    
+                    <label class="option-card checkbox-card">
+                        <input type="checkbox" name="option_sms" data-prix="1">
+                        <div class="option-info">
+                            <span class="option-title">Info par SMS</span>
+                            <span class="option-desc">Infos en temps réel.</span>
+                        </div>
+                        <strong class="option-price">+1,00€</strong>
+                    </label>
+                    
+                    <label class="option-card checkbox-card">
+                        <input type="checkbox" name="option_annulation" data-prix="2.9">
+                        <div class="option-info">
+                            <span class="option-title">Garantie Annulation</span>
+                            <span class="option-desc">Remboursement simplifié.</span>
+                        </div>
+                        <strong class="option-price">+2,90€</strong>
+                    </label>
+                </div>
+            </div>
+
+            <div class="options-footer">
+                <div class="total-row">
+                    <span>Total à payer</span>
+                    <span class="total-amount"><span id="prix-total-options">0.00</span> €</span>
+                </div>
+                <button id="btn-valider-options" class="btn-add" style="margin-top:0; width:100%;">Valider et Continuer</button>
+            </div>
+
+        </div>
+    </div>
 
     <script src="../js/trajets_fetch.js"></script>
 </body>

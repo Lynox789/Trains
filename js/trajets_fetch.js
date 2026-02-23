@@ -150,28 +150,108 @@ async function chargerTrajets(dateSelectionnee = null) {
     }
 }
 
-function choisirTrajet(trajet, searchData) {
-    const billet = {
-        id: trajet._id,
-        depart: trajet.gare_depart,
-        arrivee: trajet.gare_arrivee,
-        date: trajet.date_depart,
-        heure_depart: trajet.heure_depart,
-        heure_arrivee: trajet.heure_arrivee,
-        prix: trajet.prix_base,
-        type: searchData.etape
-    };
-    localStorage.setItem(`panier_${searchData.etape}`, JSON.stringify(billet));
+let trajetEnCoursDeSelection = null;
+let searchDataGlobal = null;
 
-    if(searchData.etape === 'aller' && searchData.retour && searchData.retour !== 'undefined' && searchData.retour !== '') {
+function choisirTrajet(trajet, searchData) {
+    trajetEnCoursDeSelection = trajet;
+    searchDataGlobal = searchData;
+    
+    //remplit le petit récap dans le panneau de droite
+    const recap = document.getElementById('recap-train-choisi');
+    recap.innerHTML = `
+        <div class="recap-line"><span class="recap-label">Date</span><span class="recap-value">${trajet.date_depart}</span></div>
+        <div class="recap-line"><span class="recap-label">Départ</span><span class="recap-value">${trajet.heure_depart} - ${trajet.gare_depart}</span></div>
+        <div class="recap-line"><span class="recap-label">Arrivée</span><span class="recap-value">${trajet.heure_arrivee} - ${trajet.gare_arrivee}</span></div>
+    `;
+    
+    // on décoche toutes les options précédentes
+    document.querySelectorAll('#options-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
+    
+    // mettre a jour le prix total initial
+    calculerPrixTotalOptions();
+
+    // afficher le panneau
+    const panelOverlay = document.getElementById('options-panel');
+    panelOverlay.style.display = 'flex';
+    setTimeout(() => {
+        panelOverlay.classList.add('open');
+    }, 10);
+}
+
+function calculerPrixTotalOptions() {
+    if(!trajetEnCoursDeSelection) return;
+
+    let prixTotal = trajetEnCoursDeSelection.prix_base;
+
+    // on parcourt toutes les checkbox cochées pour ajouter leur prix
+
+    document.querySelectorAll('#options-panel input[type="checkbox"]:checked').forEach(radio => {
+        prixTotal += parseFloat(radio.getAttribute('data-prix')) || 0;
+    });
+    // afficher du prix total dans le panneau
+    document.getElementById('prix-total-options').innerText = prixTotal.toFixed(2);
+}
+
+// ecouteur d'événement : 
+    // recalculer le prix total à chaque changement d'option
+    document.querySelectorAll('#options-panel input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', calculerPrixTotalOptions);
+    });
+
+    function fermerPanneauOptions() {
+        const panelOverlay = document.getElementById('options-panel');
+        panelOverlay.classList.remove('open');
+        // attendre la fin de l'animation avant de cacher le panneau
+        setTimeout(() => {
+            panelOverlay.style.display = 'none';
+        }, 300);
+    }
+    
+    document.getElementById('close-options').addEventListener('click', fermerPanneauOptions);
+    // fermetr si on clique sur le fond sombre
+    document.getElementById('options-panel').addEventListener('click', (e) => {
+        if(e.target === e.currentTarget) {
+            fermerPanneauOptions();
+        }
+    });
+
+// validaiton final  
+document.getElementById('btn-valider-options').addEventListener('click', () => {
+    if(!trajetEnCoursDeSelection) return;
+
+    const prixTotalAffiche = parseFloat(document.getElementById('prix-total-options').innerText);
+
+    const optionsChoisies = {};
+    document.querySelectorAll('#options-panel input[type="checkbox"]:checked').forEach(radio => {
+        optionsChoisies[radio.name] = true;
+    });
+
+    const billet = {
+        id: trajetEnCoursDeSelection._id,
+        depart: trajetEnCoursDeSelection.gare_depart,
+        arrivee: trajetEnCoursDeSelection.gare_arrivee,
+        date: trajetEnCoursDeSelection.date_depart,
+        heure_depart: trajetEnCoursDeSelection.heure_depart,
+        heure_arrivee: trajetEnCoursDeSelection.heure_arrivee,
+        prix_base: trajetEnCoursDeSelection.prix_base,
+        prix_total: prixTotalAffiche, 
+        options: optionsChoisies,    
+        type: searchDataGlobal.etape
+    };
+    
+    localStorage.setItem(`panier_${searchDataGlobal.etape}`, JSON.stringify(billet));
+
+    if(searchDataGlobal.etape === 'aller' && searchDataGlobal.retour && searchDataGlobal.retour !== 'undefined' && searchDataGlobal.retour !== '') {
         // Rediriger vers la même page mais pour le retour
-        window.location.href = `trajets.html?depart=${encodeURIComponent(searchData.arrivee)}&arrivee=${encodeURIComponent(searchData.depart)}&date=${encodeURIComponent(searchData.retour)}&etape=retour`;
+        window.location.href = `trajets.html?depart=${encodeURIComponent(searchDataGlobal.arrivee)}&arrivee=${encodeURIComponent(searchDataGlobal.depart)}&date=${encodeURIComponent(searchDataGlobal.retour)}&etape=retour`;
     } else {
         alert("Trajet ajouté au panier !");
         // Rediriger vers le panier
         // window.location.href = 'panier.html';
     }
-}
+
+});
 
 async function chargerCalendrier() {
     const searchData = recupererParametres();
