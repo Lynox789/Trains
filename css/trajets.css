@@ -75,11 +75,36 @@ body {
 }
 
 /* CALENDRIER */
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
+
+.calendar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin-bottom: 30px;
+    width: 100%;
+}
+
+.calendar-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 15px;
+    padding: 10px 0;
+    flex: 1;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Edge */
+}
+
+.calendar-grid::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}
+
+.calendar-grid .day {
+    min-width: 120px;
+    flex-shrink: 0;
 }
 
 .day {
@@ -100,6 +125,29 @@ body {
     color: var(--cyan);
     font-weight: bold;
     margin-top: 5px;
+}
+
+/* LES FLÈCHES DU CARROUSEL */
+.scroll-btn {
+    background: var(--navy-bg);
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.scroll-btn:hover {
+    background: var(--cyan);
+    color: var(--navy);
 }
 
 /* TRAJET CARD */
@@ -156,7 +204,8 @@ body {
 /* ESCALES */
 .trajet-details {
     position: relative;
-    padding: 20px 20px 20px 70px; /* Espace pour la ligne à gauche */
+    padding: 20px 20px 20px 70px;
+    /* Espace pour la ligne à gauche */
     background: rgba(0, 0, 0, 0.2);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -165,7 +214,8 @@ body {
 .trajet-details::before {
     content: '';
     position: absolute;
-    left: 40px; /* Position de la ligne */
+    left: 40px;
+    /* Position de la ligne */
     top: 0;
     bottom: 0;
     width: 3px;
@@ -181,7 +231,8 @@ body {
 /* Le point lumineux sur la ligne */
 .dot.active {
     position: absolute;
-    left: -35px; /* Ajusté pour centrer sur la barre à 40px */
+    left: -35px;
+    /* Ajusté pour centrer sur la barre à 40px */
     top: 6px;
     width: 12px;
     height: 12px;
@@ -218,4 +269,238 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.9rem;
     max-width: 80%;
+}
+
+
+/*OVERLAY*/
+.options-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: none;
+    justify-content: flex-end;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Quand le panneau est ouvert */
+.options-overlay.open {
+    display: flex;
+    opacity: 1;
+}
+
+/* Le panneau latéral en lui même*/
+.options-panel-content {
+    width: 100%;
+    max-width: 450px;
+    height: 100%;
+    background: var(--navy);
+    border-left: 1px solid var(--cyan);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.options-overlay.open .options-panel-content {
+    transform: translateX(0);
+}
+
+/* En-tête */
+.options-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px 15px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.btn-close:hover {
+    color: var(--cyan);
+}
+
+/* Récap du train */
+.recap-train {
+    background: var(--glass);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recap-line {
+    display: flex;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.recap-label {
+    opacity: 0.7;
+    margin-right: 15px;
+    min-width: 70px;
+}
+
+.recap-value {
+    font-weight: 600;
+    color: var(--white);
+}
+
+/* --- Les card options (checkboxe) */
+.options-list h3 {
+    color: var(--white);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.checkbox-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    padding-left: 55px;
+}
+
+.checkbox-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--cyan);
+}
+
+/* Quand la case est cochée */
+.checkbox-card:has(input:checked) {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--cyan);
+}
+
+/* On cache la vraie checkbox moche du navigateur */
+.checkbox-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
+
+/* Création de la fausse case à cocher */
+.checkbox-card::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 22px;
+    width: 22px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* Style de la case quand elle est cochée */
+.checkbox-card:has(input:checked)::before {
+    background-color: var(--cyan);
+    border-color: var(--cyan);
+
+    /* Icône de check en SVG (couleur bleu nuit) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F172A' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Textes des options */
+.option-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.option-title {
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--white);
+}
+
+.option-desc {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 3px;
+}
+
+.option-price {
+    color: var(--cyan);
+    font-size: 1.1rem;
+    margin-left: 15px;
+}
+
+/* Design de la scrollbar pour faire propre */
+.options-scrollable-area {
+    flex: 1;
+    overflow-y: auto;
+    /* Seule cette partie défile ! */
+    padding: 25px 30px;
+}
+
+.options-scrollable-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.options-scrollable-area::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.options-scrollable-area::-webkit-scrollbar-thumb {
+    background: rgba(0, 212, 255, 0.3);
+    border-radius: 10px;
+}
+
+/* Pied de page fixe */
+.options-footer {
+    padding: 20px 30px 30px 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--navy-bg);
+    flex-shrink: 0;
+    /* Empêche le footer de s'écraser */
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.total-amount {
+    color: var(--cyan);
+}
+
+/* Responsive*/
+@media (max-width: 768px) {
+    .options-panel-content {
+        max-width: 100%;
+        /* Prend tout l'écran sur téléphone */
+        border-left: none;
+    }
 }

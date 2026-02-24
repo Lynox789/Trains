@@ -1,3 +1,28 @@
+function obtenirValeurDate(dateStr) {
+    if (!dateStr) return 0;
+    const parts = dateStr.split(' ');
+    if (parts.length < 3) return 0; 
+    
+    const jour = parseInt(parts[1], 10);
+    const moisStr = parts[2].replace('.', '').toLowerCase();
+    
+    const moisMap = { 'janv': 0, 'fév': 1, 'mars': 2, 'avr': 3, 'mai': 4, 'juin': 5, 'juil': 6, 'août': 7, 'sept': 8, 'oct': 9, 'nov': 10, 'déc': 11 };
+    const mois = moisMap[moisStr] !== undefined ? moisMap[moisStr] : 0;
+    
+    // On récupère l'année actuelle 
+    let annee = new Date().getFullYear();
+
+    // Gestion du passage à la nouvelle année (On est en Décembre et on réserve pour Janvier)
+    const moisActuel = new Date().getMonth();
+    // Si on est en fin d'année (oct, nov, dec) et qu'on réserve pour début d'année (janv, fev, mars)
+    if (moisActuel >= 9 && mois <= 2) {
+        annee += 1; 
+    }
+    
+    return new Date(annee, mois, jour).getTime();
+}
+
+
 function recupererParametres() {
     const params = new URLSearchParams(window.location.search);
     return {
@@ -8,6 +33,10 @@ function recupererParametres() {
         etape: params.get('etape') || 'aller' // Par défaut, on affiche l'aller
     };
 }
+
+const voyageursData = JSON.parse(localStorage.getItem('voyageurs')) || [{ age: 30 }];
+const nbVoyageurs = voyageursData.length;
+
 
 async function chargerTrajets(dateSelectionnee = null) {
     const searchData = recupererParametres();
@@ -89,6 +118,8 @@ async function chargerTrajets(dateSelectionnee = null) {
                     </div>`;            
             }
 
+            const prixAjuste = (trajet.prix_base * nbVoyageurs).toFixed(2);
+
             card.innerHTML = `
                 <div class="trajet-summary" onclick="toggleDetails(this)">
                     <div class="time-info">
@@ -106,7 +137,7 @@ async function chargerTrajets(dateSelectionnee = null) {
                         </div>
                     </div>
                     <div class="price-section">
-                        <p class="opt-price">${trajet.prix_base}€</p>
+                        <p class="opt-price">${prixAjuste}€</p>
                         <button class="btn-add">Choisir</button>
                     </div>
                 </div>
@@ -125,31 +156,124 @@ async function chargerTrajets(dateSelectionnee = null) {
     }
 }
 
-function choisirTrajet(trajet, searchData) {
-    const billet = {
-        id: trajet._id,
-        depart: trajet.gare_depart,
-        arrivee: trajet.gare_arrivee,
-        date: trajet.date_depart,
-        heure_depart: trajet.heure_depart,
-        heure_arrivee: trajet.heure_arrivee,
-        prix: trajet.prix_base,
-        type: searchData.etape
-    };
-    localStorage.setItem(`panier_${searchData.etape}`, JSON.stringify(billet));
+let trajetEnCoursDeSelection = null;
+let searchDataGlobal = null;
 
-    if(searchData.etape === 'aller' && searchData.retour && searchData.retour !== 'undefined' && searchData.retour !== '') {
+function choisirTrajet(trajet, searchData) {
+    trajetEnCoursDeSelection = trajet;
+    searchDataGlobal = searchData;
+    
+    //remplit le petit récap dans le panneau de droite
+    const recap = document.getElementById('recap-train-choisi');
+    recap.innerHTML = `
+        <div class="recap-line"><span class="recap-label">Date</span><span class="recap-value">${trajet.date_depart}</span></div>
+        <div class="recap-line"><span class="recap-label">Départ</span><span class="recap-value">${trajet.heure_depart} - ${trajet.gare_depart}</span></div>
+        <div class="recap-line"><span class="recap-label">Arrivée</span><span class="recap-value">${trajet.heure_arrivee} - ${trajet.gare_arrivee}</span></div>
+        
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+        <div class="recap-line"><span class="recap-label">Voyageurs</span><span class="recap-value" style="color: var(--cyan);">${nbVoyageurs} personne(s)</span></div>
+        <div class="recap-line"><span class="recap-label">Prix unitaire</span><span class="recap-value">${trajet.prix_base} € / pers.</span></div>
+    `;
+    
+    // on décoche toutes les options précédentes
+    document.querySelectorAll('#options-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
+    
+    // mettre a jour le prix total initial
+    calculerPrixTotalOptions();
+
+    // afficher le panneau
+    const panelOverlay = document.getElementById('options-panel');
+    panelOverlay.style.display = 'flex';
+    setTimeout(() => {
+        panelOverlay.classList.add('open');
+    }, 10);
+}
+
+function calculerPrixTotalOptions() {
+    if(!trajetEnCoursDeSelection) return;
+
+    let prixTotal = trajetEnCoursDeSelection.prix_base * nbVoyageurs; // Prix de base multiplié par le nombre de voyageurs
+
+    // on parcourt toutes les checkbox cochées pour ajouter leur prix
+
+    document.querySelectorAll('#options-panel input[type="checkbox"]:checked').forEach(radio => {
+       let prixOption = parseFloat(radio.getAttribute('data-prix')) || 0;
+       prixTotal += (prixOption * nbVoyageurs);
+    });
+    // afficher du prix total dans le panneau
+    document.getElementById('prix-total-options').innerText = prixTotal.toFixed(2);
+}
+
+// ecouteur d'événement : 
+    // recalculer le prix total à chaque changement d'option
+    document.querySelectorAll('#options-panel input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', calculerPrixTotalOptions);
+    });
+
+    function fermerPanneauOptions() {
+        const panelOverlay = document.getElementById('options-panel');
+        panelOverlay.classList.remove('open');
+        // attendre la fin de l'animation avant de cacher le panneau
+        setTimeout(() => {
+            panelOverlay.style.display = 'none';
+        }, 300);
+    }
+    
+    document.getElementById('close-options').addEventListener('click', fermerPanneauOptions);
+    // fermetr si on clique sur le fond sombre
+    document.getElementById('options-panel').addEventListener('click', (e) => {
+        if(e.target === e.currentTarget) {
+            fermerPanneauOptions();
+        }
+    });
+
+// validaiton final  
+document.getElementById('btn-valider-options').addEventListener('click', () => {
+    if(!trajetEnCoursDeSelection) return;
+
+    const prixTotalAffiche = parseFloat(document.getElementById('prix-total-options').innerText);
+
+    const optionsChoisies = {};
+    document.querySelectorAll('#options-panel input[type="checkbox"]:checked').forEach(radio => {
+        optionsChoisies[radio.name] = true;
+    });
+
+    const billet = {
+        id: trajetEnCoursDeSelection._id,
+        depart: trajetEnCoursDeSelection.gare_depart,
+        arrivee: trajetEnCoursDeSelection.gare_arrivee,
+        date: trajetEnCoursDeSelection.date_depart,
+        heure_depart: trajetEnCoursDeSelection.heure_depart,
+        heure_arrivee: trajetEnCoursDeSelection.heure_arrivee,
+        prix_base: trajetEnCoursDeSelection.prix_base,
+        prix_total: prixTotalAffiche, 
+        options: optionsChoisies,    
+        type: searchDataGlobal.etape
+    };
+    
+    localStorage.setItem(`panier_${searchDataGlobal.etape}`, JSON.stringify(billet));
+
+    if(searchDataGlobal.etape === 'aller' && searchDataGlobal.retour && searchDataGlobal.retour !== 'undefined' && searchDataGlobal.retour !== '') {
         // Rediriger vers la même page mais pour le retour
-        window.location.href = `trajets.html?depart=${encodeURIComponent(searchData.arrivee)}&arrivee=${encodeURIComponent(searchData.depart)}&date=${encodeURIComponent(searchData.retour)}&etape=retour`;
+        window.location.href = `trajets.html?depart=${encodeURIComponent(searchDataGlobal.arrivee)}&arrivee=${encodeURIComponent(searchDataGlobal.depart)}&date=${encodeURIComponent(searchDataGlobal.retour)}&etape=retour`;
     } else {
         alert("Trajet ajouté au panier !");
         // Rediriger vers le panier
         // window.location.href = 'panier.html';
     }
-}
+
+});
 
 async function chargerCalendrier() {
     const searchData = recupererParametres();
+
+    let timestampAller = 0;
+    if(searchData.etape === 'retour') {
+        const panierAller = JSON.parse(localStorage.getItem('panier_aller'));
+        if(panierAller && panierAller.date) {
+            timestampAller = obtenirValeurDate(panierAller.date);
+        } 
+    } 
 
     try {
         // On envoie aussi les gares au calendrier pour n'avoir que les prix pertinents
@@ -175,7 +299,7 @@ async function chargerCalendrier() {
         container.innerHTML = '';
         if (jours.length === 0) {
             container.innerHTML = `
-                <p style="grid-column: 1/-1; text-align:center; opacity:0.7;">
+                <p style="text-align:center; opacity:0.7; width:100%;">
                     Aucune date disponible pour ce trajet.
                 </p>`;
             return;
@@ -194,22 +318,56 @@ async function chargerCalendrier() {
             }
             const isCheapest = jour.prix === prixMin;
 
-            dayDiv.innerHTML = `
-                <span>${jour.date}</span>
-                <p class="${isCheapest ? 'cheapest' : ''}">${jour.prix}€</p>
-            `;
+            const timestampJour = obtenirValeurDate(jour.date);
+            const prixAfficheCal = (jour.prix * nbVoyageurs).toFixed(2); // Prix ajusté pour le nombre de voyageurs
 
-            // au clic n filtre les trajets de l'EPIC 1
-            dayDiv.onclick = () => {
-                document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
-                dayDiv.classList.add('active');
-                
-                // On appelle la fonction de l'EPIC 1 avec la date choisie
-                chargerTrajets(jour.date);
-            };
+            // Si on est sur la page de retour et que ce jour est avant l'aller, on bloque la sélection
+            if (searchData.etape === 'retour' && timestampAller && timestampJour < timestampAller) {
+                dayDiv.innerHTML = `
+                    <span>${jour.date}</span>
+                    <p style="opacity: 0.5;">--</p>
+                `;
+                // On grise la case
+                dayDiv.style.opacity = '0.3';
+                dayDiv.style.cursor = 'not-allowed';
+                dayDiv.style.pointerEvents = 'none'; // Empêche le clic
+            }else {
+                dayDiv.innerHTML = `
+                    <span>${jour.date}</span>
+                    <p class="${isCheapest ? 'cheapest' : ''}">${prixAfficheCal}€</p>
+                `;
 
+                // au clic n filtre les trajets de l'EPIC 1
+                dayDiv.onclick = () => {
+                    document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+                    dayDiv.classList.add('active');
+                    
+                    // On appelle la fonction de l'EPIC 1 avec la date choisie
+                    chargerTrajets(jour.date);
+                };
+            }
             container.appendChild(dayDiv);
         });
+
+        // gestion des boutons de scroll du calendrier
+        setTimeout(() => { // Timeout pour s'assurer que le DOM est prêt
+            const activeDay = document.querySelector('.day.active');
+            if(activeDay) {
+                // block: 'nearest' et inline: 'center' permet de mettre la case au milieu du carrousel
+                activeDay.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+            }
+        }, 100);
+        // Scroll manuel avec les boutons
+        const btnLeft = document.getElementById('scroll-left');
+        const btnRight = document.getElementById('scroll-right');
+        if(btnLeft && btnRight) {
+            btnLeft.onclick = () => {
+                container.scrollBy({left: -300, behavior: 'smooth'});
+            };
+            btnRight.onclick = () => {
+                container.scrollBy({left: 300, behavior: 'smooth'});
+            };
+        }
     } catch (err) {
         console.error("Erreur calendrier:", err);
     }

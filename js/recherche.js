@@ -60,6 +60,28 @@ function formaterDatePourBDD(dateInput) {
     return dateFormatee.replace('févr.', 'fév.').replace('janv.', 'janv.'); 
 }
 
+
+
+// Gestion des dates (Blocage des dates impossibles)
+const dateDepartInput = document.getElementById('date_depart');
+const dateRetourInput = document.getElementById('date_retour');
+
+// Bloquer les dates dans le passé pour l'aller
+const today = new Date().toISOString().split('T')[0];
+dateDepartInput.min = today;
+
+// Quand on choisit une date d'aller, on met à jour le retour
+dateDepartInput.addEventListener('change', () => {
+    // La date minimum pour le retour devient la date de l'aller
+    dateRetourInput.min = dateDepartInput.value;
+    
+    // Si l'utilisateur avait déjà choisi un retour AVANT le nouvel aller, on efface le retour
+    if (dateRetourInput.value && dateRetourInput.value < dateDepartInput.value) {
+        dateRetourInput.value = '';
+    }
+});
+
+
 function rechercher() {
     const depart = document.getElementById('lieu_depart').value;
     const arrivee = document.getElementById('lieu_arrivee').value;
@@ -74,6 +96,25 @@ function rechercher() {
     const dateAller = formaterDatePourBDD(dateAllerRaw);
     const dateRetour = dateRetourRaw ? formaterDatePourBDD(dateRetourRaw) : "";
 
+    const voyageurs = [];
+    const cartesVoyageur = document.querySelectorAll('.voyageur-card');
+    
+    cartesVoyageur.forEach(carte => {
+        const ageInput = carte.querySelector('input[type="number"]');
+        voyageurs.push({
+            age: ageInput && ageInput.value ? parseInt(ageInput.value) : 30,
+        });
+    });
+
+    //si l'utilisateur n'a ajouter aucun voyageur, on ajoute un voyageur par défaut pour éviter les erreurs dans la page de résultats 
+    if(voyageurs.length === 0) {
+        voyageurs.push({ age: 30});
+    }
+
+    //On sauvegard le tableau des voyageur dans le mémoire du navigateur pour pouvoir le récupérer dans la page de résultats
+    localStorage.setItem('voyageurs', JSON.stringify(voyageurs));   
+
+    // redirection 
     window.location.href = `trajets.html?depart=${encodeURIComponent(depart)}&arrivee=${encodeURIComponent(arrivee)}&date=${encodeURIComponent(dateAller)}&retour=${encodeURIComponent(dateRetour)}&etape=aller`;
 }
 
