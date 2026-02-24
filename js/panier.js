@@ -1,64 +1,117 @@
-document.addEventListener('DOMContentLoaded', () => {
-    chargerPanier();
-});
-
 function chargerPanier() {
     const container = document.getElementById('liste-billets');
     const totalSpan = document.getElementById('prix-total');
-    
-    // Récupération des données du localStorage 
+
     const aller = JSON.parse(localStorage.getItem('panier_aller'));
     const retour = JSON.parse(localStorage.getItem('panier_retour'));
 
-    container.innerHTML = ''; 
-    let total = 0;
+    const voyageursInitiaux = JSON.parse(localStorage.getItem('voyageurs')) || [{age: 30}];
 
-    // Fonction utilitaire pour générer le HTML d'un billet
-    const creerHtmlBillet = (trajet, type) => {
-        const prix = parseFloat(trajet.prixTotal || trajet.prix); 
-        total += prix;
+    container.innerHTML = ''; 
+    let totalGlobal = 0;
+
+    const genererHtmlTrajet = (trajet, key) => {
+        if (!trajet) return '';
+
+        if (!trajet.passagers) {
+            trajet.passagers = JSON.parse(JSON.stringify(voyageursInitiaux)); 
+
+            if(trajet.passagers.length === 0) {
+                 trajet.passagers.push({age: 30, nom: ''});
+            }
+            localStorage.setItem(key, JSON.stringify(trajet)); 
+        }
+
+        const nbV = trajet.passagers.length;
+        
+        const prixTotalTrajet = (trajet.prix_base * nbV);
+
+        
+        totalGlobal += prixTotalTrajet;
+
+        let passagersHTML = trajet.passagers.map((p, index) => `
+            <div class="passenger-input-row">
+                
+                <div class="input-group full-width">
+                    <label>Nom complet</label>
+                    <input type="text" placeholder="Ex: Jean Dupont" value="${p.nom || ''}" 
+                        oninput="modifierPassager('${key}', ${index}, 'nom', this.value)">
+                </div>
+
+                <div class="input-group small-width">
+                    <label>Âge</label>
+                    <input type="number" min="0" max="120" value="${p.age || 30}" 
+                        oninput="modifierPassager('${key}', ${index}, 'age', this.value)">
+                </div>
+
+                <button class="btn-delete-row" title="Retirer ce voyageur"
+                    onclick="retirerPassager('${key}', ${index})">×</button>
+            </div>
+        `).join('');
 
         return `
-        <div class="ticket-card" id="card-${type}">
-            <div>
-                <h3>Trajet ${type === 'panier_aller' ? 'Aller' : 'Retour'}</h3>
-                <p><strong>${trajet.gare_depart}</strong> ➝ <strong>${trajet.gare_arrivee}</strong></p>
-                <p>Date : ${trajet.date_depart} à ${trajet.heure_depart}</p>
-                <p>Voyageurs : ${localStorage.getItem('voyageurs') || 1}</p>
+        <div class="trajet-card" style="margin-bottom: 20px;">
+            <h3 style="color: var(--cyan); margin-bottom: 10px;">Trajet ${key === 'panier_aller' ? 'Aller' : 'Retour'}</h3>
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+                <span>${trajet.depart || trajet.gare_depart}</span>
+                <span>➔</span>
+                <span>${trajet.arrivee || trajet.gare_arrivee}</span>
             </div>
-            <div style="text-align: right;">
-                <p class="prix" style="font-size: 1.5rem; color: #6c63ff; font-weight: bold;">${prix.toFixed(2)} €</p>
-                <button class="btn-delete" onclick="supprimerItem('${type}')">
-                    <img src="img/trash.svg" alt="Supprimer" width="24">
+            
+            <div class="passagers-liste">
+                ${passagersHTML}
+                <button onclick="ajouterPassager('${key}')" class="btn-member" style="margin-top:15px; font-size:0.8rem;">
+                    + Ajouter un voyageur
                 </button>
             </div>
-        </div>
-        `;
+            
+            <p class="opt-price" style="text-align:right; margin-top:15px; font-size:1.4rem;">
+                ${prixTotalTrajet.toFixed(2)} €
+            </p>
+        </div>`;
     };
 
-    let aDesBillets = false;
-
-    if (aller) {
-        container.innerHTML += creerHtmlBillet(aller, 'panier_aller');
-        aDesBillets = true;
-    }
-
-    if (retour) {
-        container.innerHTML += creerHtmlBillet(retour, 'panier_retour');
-        aDesBillets = true;
-    }
-
-    if (!aDesBillets) {
-        container.innerHTML = '<p style="text-align:center; color: #666;">Votre panier est vide.</p>';
-        document.querySelector('.btn-payer').style.display = 'none';
-    }
-
-    totalSpan.textContent = total.toFixed(2);
+    container.innerHTML += genererHtmlTrajet(aller, 'panier_aller');
+    container.innerHTML += genererHtmlTrajet(retour, 'panier_retour');
+    
+    totalSpan.textContent = totalGlobal.toFixed(2);
 }
 
-function supprimerItem(key) {
-    if(confirm("Voulez-vous vraiment supprimer ce trajet du panier ?")) {
-        localStorage.removeItem(key);
-        chargerPanier();
-    }
+function modifierPassager(key, index, champ, valeur) {
+    let trajet = JSON.parse(localStorage.getItem(key));
+    trajet.passagers[index][champ] = valeur;
+    localStorage.setItem(key, JSON.stringify(trajet));
 }
+
+function ajouterPassager(key) {
+    let trajet = JSON.parse(localStorage.getItem(key));
+
+    trajet.passagers.push({nom: "", age: 30});
+
+    trajet.prix_total = trajet.prix_base * trajet.passagers.length;
+    
+    localStorage.setItem(key, JSON.stringify(trajet));
+    chargerPanier(); 
+}
+
+function retirerPassager(key, index) {
+    let trajet = JSON.parse(localStorage.getItem(key));
+    
+    if(trajet.passagers.length <= 1) {
+        alert("Il faut au moins un passager pour ce billet !");
+        return;
+    }
+
+    trajet.passagers.splice(index, 1);
+
+    trajet.prix_total = trajet.prix_base * trajet.passagers.length;
+    
+    localStorage.setItem(key, JSON.stringify(trajet));
+    chargerPanier();
+}
+
+function confirmerCommande() {
+    window.location.href = 'recapitulatif.html';
+}
+
+document.addEventListener('DOMContentLoaded', chargerPanier);

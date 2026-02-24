@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>europe.transports | Vérification</title>
+    <link rel="stylesheet" href="../css/trajets.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/panier.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo"><img src="img/Logo.svg" alt="Logo"></div>
+        <nav>
+            <a href="dashboard.html">Voyager</a>
+            <a href="panier.html">Retour au panier</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1 class="Titre_principal">Vérifiez votre commande</h1>
+        
+        <div id="recap-final-container"></div>
+
+        <div class="panier-footer">
+            <div class="total-row">
+                <span>TOTAL FINAL</span>
+                <span style="color: var(--cyan);"><span id="total-final">0.00</span> €</span>
+            </div>
+            
+            <div style="display: flex; gap: 20px; margin-top: 20px;">
+                <button onclick="window.location.href='panier.html'" class="btn-member" style="flex: 1; justify-content: center;">
+                    Modifier
+                </button>
+                
+                <button onclick="window.location.href='payer.html'" class="btn-add" style="flex: 2; height: 55px;">
+                    Passer au paiement
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/recapitulatif.js"></script>
+</body>
+</html>
