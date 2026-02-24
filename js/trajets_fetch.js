@@ -259,7 +259,7 @@ document.getElementById('btn-valider-options').addEventListener('click', () => {
     } else {
         alert("Trajet ajouté au panier !");
         // Rediriger vers le panier
-        // window.location.href = 'panier.html';
+        window.location.href = '/panier.html';
     }
 
 });
@@ -383,4 +383,41 @@ function toggleDetails(element) {
 window.onload = () => {
     chargerCalendrier();
     chargerTrajets();
+}
+
+function ajouterAuPanier(trajet) {
+    const params = new URLSearchParams(window.location.search);
+    const estRetour = params.get('retour') === 'true'; 
+
+    const billet = {
+        id: trajet._id,
+        gare_depart: trajet.gare_depart,
+        gare_arrivee: trajet.gare_arrivee,
+        date_depart: trajet.date_depart,
+        heure_depart: trajet.heure_depart,
+        prix: trajet.prix_base, 
+        type: estRetour ? 'Retour' : 'Aller'
+    };
+
+    if (estRetour) {
+        localStorage.setItem('panier_retour', JSON.stringify(billet));
+        alert('Trajet RETOUR ajouté !');
+        window.location.href = '/panier';
+    } else {
+        localStorage.setItem('panier_aller', JSON.stringify(billet));
+
+        const typeVoyage = localStorage.getItem('type_voyage') || 'aller-simple';
+        
+        if (typeVoyage === 'aller-retour') {
+            if(confirm('Aller ajouté ! Voulez-vous choisir le retour maintenant ?')) {
+                const dateRetour = localStorage.getItem('date_retour_prevue');
+                window.location.href = `trajets.html?depart=${billet.gare_arrivee}&arrivee=${billet.gare_depart}&date=${dateRetour}&retour=true`;
+            } else {
+                window.location.href = '/panier';
+            }
+        } else {
+            alert('Billet ajouté au panier !');
+            window.location.href = '/panier';
+        }
+    }
 }

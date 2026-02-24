@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Panier - Europe Transports</title>
+    
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/panier.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="img/Logo.svg" alt="Europe Transports">
+        </div>
+        <div class="nav-links">
+            <a href="/dashboard.html">Accueil</a>
+            <a href="#" class="active">Mon Panier</a>
+            <div class="profile">
+                <img src="img/Member.svg" alt="Profil">
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="panier-container">
+            <div class="panier-header">
+                <h1>Récapitulatif de la commande</h1>
+                <span class="step-indicator">Étape 2/3</span>
+            </div>
+
+            <div id="liste-billets" class="billets-wrapper">
+                <div class="empty-state">
+                    <p>Votre panier est vide pour le moment.</p>
+                </div>
+            </div>
+
+            <div class="panier-footer">
+                <div class="total-row">
+                    <span>Total à payer</span>
+                    <span id="prix-total" class="total-price">0.00 €</span>
+                </div>
+                <button class="btn-payer" onclick="alert('Faut rediriger vers la page de paiement chef')">
+                    Valider et Payer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/panier.js"></script>
+</body>
+</html>
