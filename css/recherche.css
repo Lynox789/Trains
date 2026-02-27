@@ -1,26 +1,10 @@
-:root {
-    --navy: #0F172A;
-    --dark-blue: #1E293B;
-    --cyan: #00D4FF;
-    --white: #FFFFFF;
-    --glass: #ffffff0d;
-    --navy-bg: #0F172A; /* Le bleu très sombre de votre image */
-    --slide-width: 350px; /* Largeur d'une image */
-    --slide-gap: 30px;    /* Espace entre les images */
-    --total-slides: 5;    /* Nombre d'images réelles */
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 body {
-    background-color: var(--navy);
-    color: var(--white);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transition fluide entre les modes */
 }
 
 .container {
@@ -31,65 +15,6 @@ body {
 }
 .container h1 {
     padding: 20px;
-}
-
-/* NAVBAR */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.navbar nav {
-    display: flex;
-    gap: 30px;
-}
-
-.navbar nav a {
-    color: var(--white);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
-}
-
-.navbar nav a:hover {
-    color: var(--cyan);
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.logo span {
-    color: var(--cyan);
-}
-
-
-.btn-member {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: transparent;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    padding: 8px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-member:hover {
-    background: var(--cyan);
-    color: var(--navy);
-}
-
-.btn-member img {
-    color: var(--white);
-
 }
 
 /* RECHERCHE */
@@ -127,8 +52,8 @@ body {
     flex-direction: column;
     gap: 15px;
     border: none;
-    border-top: 5px solid var(--white);
-    color: var(--white);
+    border-top: 5px solid var(--text-color);
+    color: var(--text-color);
     font-weight: 600;
 }
 
@@ -141,14 +66,14 @@ body {
     flex-direction: column;
     gap: 15px;
     border: none;
-    border-bottom: 5px solid var(--white);
-    color: var(--white);
+    border-bottom: 5px solid var(--text-color);
+    color: var(--text-color);
     font-weight: 600;
 }
 
 .lieu_arrivee input::placeholder,
 .lieu_depart input::placeholder {
-    color: var(--white);
+    color: var(--text-color);
     opacity: 0.7;
 }
 
@@ -162,7 +87,7 @@ body {
     top: -30px; 
     width: 60px;
     height: 60px;
-    background-color: var(--cyan);
+    background-color: var(--accent-color);
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -187,15 +112,15 @@ body {
     background-color: var(--glass);
     padding: 20px;
     border-radius: 20px;
-    border: none;
-    color: var(--white);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     font-weight: 600;
     outline: none; 
 }
 
 .date input:focus {
-    background-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 2px var(--cyan); 
+    background-color: var(--surface-color);
+    box-shadow: 0 0 0 2px var(--accent-color); 
     transition: all 0.3s ease;
 }
 
@@ -219,6 +144,7 @@ body {
     gap: 15px;
     margin-top: 20px;
     background-color: var(--glass);
+    border: 1px solid var(--border-color);
     padding: 20px;
     border-radius: 20px;
     max-width: 150px;
@@ -226,6 +152,7 @@ body {
 
 .nbr_personne img {
     width: 1.5rem;
+    filter: invert(var(--icon-invert, 0)); /* S'adapte au mode clair/sombre */
 }
 
 .nbr_personne span {
@@ -253,13 +180,13 @@ body {
 }
 
 #container-voyageurs::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-color);
     border-radius: 10px;
 }
 
 .voyageur-card {
     background: var(--glass);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 15px;
@@ -267,8 +194,8 @@ body {
 }
 
 .voyageur-card:hover {
-    border-color: rgba(0, 212, 255, 0.3);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-color);
+    background: var(--surface-color);
 }
 
 .voyageur-header {
@@ -277,8 +204,8 @@ body {
     align-items: center;
     font-weight: bold;
     margin-bottom: 15px;
-    color: var(--white);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
 }
 
@@ -306,12 +233,11 @@ body {
 
 /* L'input Âge */
 .voyageur-body input[type="number"] {
-    width: 100%;
     padding: 12px 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--glass);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
-    color: var(--white);
+    color: var(--text-color);
     font-size: 1rem;
     margin-bottom: 15px;
     outline: none;
@@ -319,56 +245,13 @@ body {
 }
 
 .voyageur-body input[type="number"]:focus {
-    border-color: var(--cyan);
+    border-color: var(--accent-color);
+    background: var(--surface-color);
 }
 
 .voyageur-body input[type="number"]::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-/* Section Adhérent */
-.adherent-section p {
-    font-size: 0.95em;
-    margin-bottom: 10px;
-    color: var(--white);
-    opacity: 0.8;
-}
-
-.radio-group {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
-
-/* Customisation des boutons Radio */
-.radio-container {
-    display: flex;
-    align-items: center;
-    position: relative;
-    padding-left: 25px;
-    cursor: pointer;
-    font-size: 0.95em;
-    color: var(--white);
-    user-select: none;
-}
-
-.radio-container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.checkmark {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    height: 18px;
-    width: 18px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    transition: 0.2s;
+    color: var(--text-color);
+    opacity: 0.5;
 }
 
 .radio-container:hover input~.checkmark {
@@ -403,9 +286,9 @@ body {
 
 .btn-recherche {
     margin-top: 30px;
-    background-color: var(--transparent);
-    color: var(--cyan);
-    border: 1px solid var(--cyan);
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
     padding: 15px 30px;
     font-size: 1.1rem;
     font-weight: 600;
@@ -414,9 +297,10 @@ body {
     transition: all 0.3s ease;
     max-width: 200px;
 }
+
 .btn-recherche:hover {
-    background-color: var(--cyan);
-    color: var(--navy);
+    background-color: var(--accent-color);
+    color: #FFFFFF; /* Le texte devient blanc au survol */
 }
 
 .input-wrapper {
@@ -431,32 +315,31 @@ body {
     top: 100%; 
     left: 0;
     width: 100%; 
-    background: var(--navy); 
-    border: 1px solid var(--cyan); 
+    background: var(--surface-color); 
+    border: 1px solid var(--accent-color); 
     border-top: none;
     border-radius: 0 0 15px 15px;
     z-index: 1000; 
     max-height: 200px;
-    /* Si la liste est longue, on scroll */
     overflow-y: auto;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     margin-top: -10px; 
 }
 
 /* Chaque gare dans la liste */
 .suggestion-item {
     padding: 12px 20px;
-    color: var(--white);
+    color: var(--text-color);
     cursor: pointer;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     font-size: 0.9rem;
     font-weight: 500;
     transition: background 0.2s;
 }
 
 .suggestion-item:hover {
-    background: var(--cyan); 
-    color: var(--navy); 
+    background: var(--accent-color); 
+    color: #FFFFFF; 
 }
 
 /* Design de la scrollbar (Webkit) */
@@ -464,13 +347,13 @@ body {
     width: 8px;
 }
 .suggestions-box::-webkit-scrollbar-track {
-    background: var(--navy);
+    background: var(--surface-color);
     border-radius: 0 0 15px 0;
 }
 .suggestions-box::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--border-color);
     border-radius: 4px;
 }
 .suggestions-box::-webkit-scrollbar-thumb:hover {
-    background: var(--cyan);
+    background: var(--accent-color);
 }

@@ -2,18 +2,59 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>europe.transports | Vérification</title>
-    <link rel="stylesheet" href="../css/trajets.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/panier.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/recapitulatif.css">
 </head>
 <body>
     <header class="navbar">
-        <div class="logo"><img src="img/Logo.svg" alt="Logo"></div>
+        <div class="logo"><img src="img/Logo.svg" alt=""></div>
         <nav>
             <a href="dashboard.html">Voyager</a>
-            <a href="panier.html">Retour au panier</a>
+            <a href="#">Billets</a>
+            <a href="#">Compte</a>
+            <a href="#">Contact</a>
+            <button class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+
         </nav>
+        <div class="navbar_right">
+            <!-- From Uiverse.io by chicogale -->
+            <div class="cyber-toggle-wrapper">
+                <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
+                <label class="cyber-toggle" for="cyber-toggle">
+                    <div class="cyber-toggle-track">
+                        <div class="cyber-toggle-track-glow"></div>
+                        <div class="cyber-toggle-track-dots">
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-thumb">
+                        <div class="cyber-toggle-thumb-shadow"></div>
+                        <div class="cyber-toggle-thumb-highlight"></div>
+                        <div class="cyber-toggle-thumb-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-particles">
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                    </div>
+                </label>
+                <div class="cyber-toggle-labels">
+                    <span class="cyber-toggle-label-off">Dark</span>
+                    <span class="cyber-toggle-label-on">Light</span>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main class="container">
@@ -21,24 +62,25 @@
         
         <div id="recap-final-container"></div>
 
-        <div class="panier-footer">
+        <div class="recap-footer-container">
             <div class="total-row">
                 <span>TOTAL FINAL</span>
-                <span style="color: var(--cyan);"><span id="total-final">0.00</span> €</span>
+                <span style="color: var(--accent-color);"><span id="total-final">0.00</span> €</span>
             </div>
             
-            <div style="display: flex; gap: 20px; margin-top: 20px;">
-                <button onclick="window.location.href='panier.html'" class="btn-member" style="flex: 1; justify-content: center;">
+            <div class="action-buttons">
+                <button onclick="window.location.href='panier.html'" class="btn-member btn-modifier">
                     Modifier
                 </button>
                 
-                <button onclick="window.location.href='payer.html'" class="btn-add" style="flex: 2; height: 55px;">
+                <button onclick="window.location.href='payer.html'" class="btn-payer">
                     Passer au paiement
                 </button>
             </div>
         </div>
     </main>
 
+    <script src="../js/theme.js"></script>
     <script src="../js/recapitulatif.js"></script>
 </body>
 </html>
