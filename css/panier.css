@@ -1,10 +1,33 @@
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transition fluide entre les modes */
+}
 
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.Titre_principal {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    color: var(--text-color);
+    font-weight: 800;
+}
+
+/* --- LE PIED DU PANIER (Total) --- */
 .panier-footer {
     margin-top: 30px;
-    background: var(--glass);
+    background: var(--surface-color);
     padding: 30px;
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .total-row {
@@ -14,26 +37,29 @@
     font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 20px;
+    color: var(--text-color);
 }
 
 .total-amount-val {
-    color: var(--cyan);
+    color: var(--accent-color);
 }
 
+/* --- BOUTONS --- */
 .btn-add-passenger {
-    background: var(--cyan);
-    border: none;
-    color: var(--navy);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 8px 15px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     margin-top: 15px;
-    transition: transform 0.2s;
+    transition: 0.2s;
 }
 
 .btn-add-passenger:hover {
-    transform: scale(1.02);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
 }
 
 .btn-confirm-order {
@@ -41,23 +67,30 @@
     height: 60px;
     font-size: 1.3rem;
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    background: var(--cyan);
+    background: var(--accent-color);
+    color: #FFFFFF; /* Toujours blanc pour ressortir sur le cyan/azur */
     border: none;
     font-weight: bold;
-    color: var(--navy);
+    transition: 0.3s;
 }
 
+.btn-confirm-order:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* --- INPUTS VOYAGEURS --- */
 .passenger-input-row {
     display: flex;
     align-items: flex-end; 
     gap: 15px;
     margin-top: 15px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--glass);
     padding: 15px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
 }
 
 .input-group {
@@ -68,23 +101,19 @@
 
 .input-group label {
     font-size: 0.85rem;
-    color: #94a3b8; 
+    color: var(--text-color); 
+    opacity: 0.7;
     font-weight: 500;
     margin-left: 2px;
 }
 
-.input-group.full-width {
-    flex: 1;
-}
-
-.input-group.small-width {
-    width: 90px;
-}
+.input-group.full-width { flex: 1; }
+.input-group.small-width { width: 90px; }
 
 .passenger-input-row input {
-    background: #0F172A; 
-    border: 1px solid #334155;
-    color: white;
+    background: var(--bg-color); 
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     padding: 10px 15px;
     border-radius: 8px;
     outline: none;
@@ -94,12 +123,13 @@
 }
 
 .passenger-input-row input:focus {
-    border-color: var(--cyan);
-    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    border-color: var(--accent-color);
+    background: var(--surface-color);
 }
 
+/* Bouton supprimer un voyageur (Reste rouge pour indiquer le danger) */
 .btn-delete-row {
-    background: rgba(239, 68, 68, 0.15);
+    background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
     border: 1px solid rgba(239, 68, 68, 0.3);
     border-radius: 8px;
@@ -119,41 +149,41 @@
     color: white;
 }
 
+/* --- CARTES DE RÉCAPITULATIF (Billet Aller/Retour) --- */
 .recap-card {
-    background: var(--glass);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 0; 
     margin-bottom: 25px;
     overflow: hidden; 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s;
+    transition: transform 0.2s, border-color 0.2s;
 }
 
 .recap-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(0, 212, 255, 0.3);
+    border-color: var(--accent-color);
 }
 
 .recap-header {
-    background: rgba(0, 212, 255, 0.1);
+    background: var(--glass);
     padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .recap-type {
     font-weight: 800;
     text-transform: uppercase;
-    color: var(--cyan);
+    color: var(--accent-color);
     letter-spacing: 1px;
     font-size: 0.9rem;
 }
 
 .recap-date {
-    color: var(--white);
+    color: var(--text-color);
     opacity: 0.8;
     font-size: 0.95rem;
     font-weight: 500;
@@ -167,22 +197,22 @@
     font-size: 1.4rem;
     font-weight: 700;
     margin-bottom: 20px;
-    color: var(--white);
+    color: var(--text-color);
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
 .arrow-icon {
-    color: var(--cyan);
+    color: var(--accent-color);
     font-size: 1.2rem;
 }
 
 .recap-details-box {
-    background: rgba(15, 23, 42, 0.6); 
+    background: var(--glass); 
     border-radius: 12px;
     padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
 }
 
 .detail-group {
@@ -196,7 +226,8 @@
 .detail-label {
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: #94a3b8;
+    color: var(--text-color);
+    opacity: 0.7;
     margin-bottom: 8px;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -213,15 +244,17 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 6px;
-    color: var(--white);
+    color: var(--text-color);
     font-size: 1rem;
 }
 
 .passenger-icon {
     width: 20px; 
     opacity: 0.5;
+    filter: invert(var(--icon-invert, 0)); /* S'adapte au mode clair/sombre */
 }
 
+/* Options */
 .options-container {
     display: flex;
     flex-wrap: wrap;
@@ -229,9 +262,9 @@
 }
 
 .option-badge {
-    background: rgba(0, 212, 255, 0.1);
-    color: var(--cyan);
-    border: 1px solid rgba(0, 212, 255, 0.3);
+    background: var(--glass);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.85rem;
@@ -240,14 +273,14 @@
 
 .recap-footer {
     padding: 15px 25px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
     display: flex;
     justify-content: flex-end;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--glass);
 }
 
 .recap-price {
     font-size: 1.6rem;
     font-weight: 800;
-    color: var(--cyan);
+    color: var(--accent-color);
 }

@@ -1,26 +1,9 @@
-:root {
-    --navy: #0F172A;
-    --dark-blue: #1E293B;
-    --cyan: #00D4FF;
-    --white: #FFFFFF;
-    --glass: #ffffff0d;
-    --navy-bg: #0F172A; 
-    --slide-width: 350px; 
-    --slide-gap: 30px;    
-    --total-slides: 5;    
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    background-color: var(--navy);
-    color: var(--white);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transition fluide entre les modes */
 }
 
 .container {
@@ -28,70 +11,6 @@ body {
     padding: 40px 20px;
 }
 
-/* NAVBAR */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.navbar nav {
-    display: flex;
-    gap: 30px;
-}
-
-.navbar nav a {
-    color: var(--white);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
-}
-
-.navbar nav a:hover {
-    color: var(--cyan);
-}
-
-.logo img{
-    width: 5rem;
-    height: 5rem;
-}
-
-/*
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.logo span {
-    color: var(--cyan);
-}
-*/
-
-.btn-member {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: transparent;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    padding: 8px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-member:hover {
-    background: var(--cyan);
-    color: var(--navy);
-}
-
-.btn-member img {
-    color: var(--white);
-
-}
 /* Titre principal */
 .Titre_principal {
     text-align: center;
@@ -124,14 +43,14 @@ body.search-active .search-wrapper {
     border-radius: 20px;
     padding: 10px;
     backdrop-filter: blur(10px); 
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
 }
 
 .input-row input {
     flex: 1;
     background: transparent;
     border: none;
-    color: var(--white);
+    color: var(--text-color);
     padding: 15px;
     font-size: 1.1rem;
     outline: none;
@@ -140,7 +59,7 @@ body.search-active .search-wrapper {
 /* Le bouton Loupe */
 .btn-search {
     transform: none; 
-    background: var(--cyan);
+    background: var(--accent-color);
     border: none;
     border-radius: 50%;
     padding: 12px;
@@ -148,11 +67,11 @@ body.search-active .search-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.3s;
+    transition: opacity 0.3s;
 }
 
 .btn-search:hover {
-    background: #00b8e6;
+    opacity: 0.8;
 }
 
 .btn-search img {
@@ -164,30 +83,26 @@ body.search-active .search-wrapper {
     opacity: 0.5; 
     cursor: not-allowed; 
     background: #ccc; 
-    transform: none ; 
-}
-
-.btn-search:disabled img {
-    opacity: 0.5;
 }
 
 /* La Liste de Suggestions */
 .suggestions-box {
-    display: none; /* Caché par défaut */
+    display: none; 
     flex-direction: column;
-    background: rgba(15, 23, 42, 0.95); 
+    background: var(--surface-color); 
     border-radius: 0 0 20px 20px; 
     margin-top: -2px; 
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     border-top: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 /* Quand la liste est ouverte (classe ajoutée par JS) */
 .search-wrapper.open .input-row {
     border-radius: 20px 20px 0 0; 
-    background: rgba(15, 23, 42, 0.95); 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--surface-color); 
+    border-bottom: 1px solid var(--border-color);
 }
 
 .search-wrapper.open .suggestions-box {
@@ -197,16 +112,16 @@ body.search-active .search-wrapper {
 /* Les éléments de la liste */
 .suggestion-item {
     padding: 15px 20px;
-    color: var(--white);
+    color: var(--text-color);
     cursor: pointer;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.2s;
     text-align: left;
 }
 
 .suggestion-item:hover {
-    background: var(--cyan);
-    color: var(--navy);
+    background: var(--accent-color);
+    color: var(--surface-color);
 }
 
 /* Le Voile Flou (Overlay) */
@@ -216,7 +131,7 @@ body.search-active .search-wrapper {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 23, 42, 0.7); 
+    background: var(--overlay); 
     backdrop-filter: blur(8px); 
     opacity: 0;
     pointer-events: none;
@@ -236,13 +151,13 @@ body.search-active {
 
 /* Carrousel */
 .infinite-carousel {
-    background-color: var(--navy-bg);
+    background-color: var(--bg-color);
     padding: 60px 0;
     overflow: hidden;
 }
 
 .carousel-title {
-    color: white;
+    color: var(--text-color);
     font-family: 'Inter', sans-serif;
     margin-left: 50px;
     margin-bottom: 30px;
@@ -277,7 +192,7 @@ body.search-active {
     height: 220px;
     object-fit: cover;
     border-radius: 40px; 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
 }
 
 @keyframes scroll-infinite {
@@ -317,8 +232,8 @@ body.search-active {
 }
 
 .day.active {
-    border-color: var(--cyan);
-    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--accent-color);
+    background: var(--glass);
 }
 
 .day span {
@@ -328,7 +243,7 @@ body.search-active {
 
 .day p {
     font-weight: 800;
-    color: var(--cyan);
+    color: var(--accent-color);
 }
 
 /* LAYOUT */
@@ -348,10 +263,11 @@ body.search-active {
     border-radius: 16px;
     margin-bottom: 15px;
     transition: 0.3s;
+    border: 1px solid var(--border-color);
 }
 
 .option-card:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--surface-color);
 }
 
 .opt-info strong {
@@ -366,13 +282,14 @@ body.search-active {
 
 .opt-price {
     font-weight: 800;
-    color: var(--cyan);
+    color: var(--accent-color);
     margin: 0 20px;
 }
 
 .btn-add {
-    background: white;
-    border: none;
+    background: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     padding: 8px 15px;
     border-radius: 8px;
     font-weight: 700;
@@ -381,12 +298,14 @@ body.search-active {
 
 /* CART */
 .cart-sidebar {
-    background: var(--dark-blue);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
     padding: 30px;
     border-radius: 24px;
     height: fit-content;
     position: sticky;
     top: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 .cart-items {
@@ -401,12 +320,12 @@ body.search-active {
 }
 
 .promo {
-    color: var(--cyan);
+    color: var(--accent-color);
     font-weight: 700;
 }
 
 .total-section {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
     padding-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -421,13 +340,14 @@ body.search-active {
 .btn-checkout {
     width: 100%;
     padding: 18px;
-    background: var(--cyan);
+    background: var(--accent-color);
+    color: #FFFFFF;
     border: none;
     border-radius: 14px;
     font-weight: 800;
     margin-top: 20px;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 @media (max-width: 768px) {
