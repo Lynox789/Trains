@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Billet - europe.transports</title>
+    <link rel="stylesheet" href="../css/theme.css">
+    <style>
+        .container { max-width: 600px; margin: 40px auto; padding: 20px; }
+        .billet-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; }
+        .search-section { text-align: center; margin-bottom: 20px; }
+        .search-section input { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--glass); color: var(--text-color); }
+        .search-section button { padding: 10px 20px; border-radius: 8px; border: none; background: var(--accent-color); color: white; cursor: pointer; font-weight: bold; }
+        .ticket-info { background: var(--glass); padding: 20px; border-radius: 12px; margin-top: 20px; }
+        .action-btns { display: flex; gap: 15px; margin-top: 25px; justify-content: center; }
+        .btn-action { padding: 12px 20px; border-radius: 8px; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-action:hover { background: var(--accent-color); color: white; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="billet-card">
+            <h1 class="Titre_principal" style="text-align: center;">Édition de Billet</h1>
+            
+            <div class="search-section" id="search-section">
+                <input type="text" id="input-ref" placeholder="Saisir votre n° de résa (RES-...)">
+                <button onclick="rechercherBillet()">Chercher</button>
+            </div>
+
+            <div id="ticket-result" style="display: none;">
+                <div class="ticket-info" id="ticket-content">
+                    </div>
+                
+                <div class="action-btns">
+                    <button class="btn-action" onclick="envoyerMail()">Envoyer par Mail</button>
+                    <button class="btn-action" onclick="window.print()">Imprimer le Billet</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function rechercherBillet() {
+            const inputRef = document.getElementById('input-ref').value;
+            const currentRef = localStorage.getItem('current_ref');
+            
+            // Si on vient juste de payer ou si on tape la bonne référence
+            if (inputRef === currentRef || (!inputRef && currentRef)) {
+                document.getElementById('search-section').style.display = 'none';
+                document.getElementById('ticket-result').style.display = 'block';
+                
+                const aller = JSON.parse(localStorage.getItem('panier_aller'));
+                document.getElementById('ticket-content').innerHTML = `
+                    <h3 style="color: var(--accent-color); margin-bottom: 15px;">Réservation confirmée</h3>
+                    <p><strong>Référence :</strong> ${currentRef}</p>
+                    <p><strong>Trajet :</strong> ${aller.depart || aller.gare_depart} ➔ ${aller.arrivee || aller.gare_arrivee}</p>
+                    <p><strong>Date :</strong> ${aller.date || aller.date_depart}</p>
+                    <p><strong>Heure de départ :</strong> ${aller.heure_depart}</p>
+                    <p><strong>Prix Total :</strong> ${aller.prix_total} €</p>
+                `;
+            } else {
+                alert("Numéro de réservation introuvable.");
+            }
+        }
+
+        function envoyerMail() {
+            // Simulation de l'envoi de mail (Tâche 2)
+            alert("Votre billet a bien été envoyé à votre adresse email !");
+        }
+
+        // Auto-chargement si l'utilisateur vient de la page de paiement
+        if(document.referrer.includes('payer.html')) {
+            document.getElementById('input-ref').value = localStorage.getItem('current_ref');
+            rechercherBillet();
+        }
+    </script>
+</body>
+</html>
