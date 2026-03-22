@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <main class="container">
+        <h1 class="Titre_principal">Panel d'Administration</h1>
+        <button onclick="logout()" class="btn-member" style="color:red; border-color:red; margin-bottom:20px;">Déconnexion</button>
+        
+        <h2>Gestion des Utilisateurs</h2>
+        <div id="users-list" style="background: var(--surface-color); padding: 20px; border-radius:10px;"></div>
+        
+        <h2 style="margin-top:40px;">Gestion des Billets / Trajets</h2>
+        <div id="trajets-list" style="background: var(--surface-color); padding: 20px; border-radius:10px;"></div>
+    </main>
+
+    <script>
+        // Sécurité admin
+        const user = JSON.parse(localStorage.getItem('user'));
+        if(!user || user.role !== 'admin') {
+            alert('Accès refusé.');
+            window.location.href = 'dashboard.html';
+        }
+
+        async function loadUsers() {
+            const res = await fetch('/api/admin/users');
+            const users = await res.json();
+            document.getElementById('users-list').innerHTML = users.map(u => `
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ccc; padding:10px;">
+                    <span>${u.nom_complet} (${u.email}) - Role: ${u.role}</span>
+                    <button onclick="deleteUser('${u._id}')" style="color:red;">Supprimer</button>
+                </div>
+            `).join('');
+        }
+
+        async function loadTrajets() {
+            const res = await fetch('/api/trajets');
+            const trajets = await res.json();
+            document.getElementById('trajets-list').innerHTML = trajets.map(t => `
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ccc; padding:10px;">
+                    <span>${t.gare_depart} ➔ ${t.gare_arrivee} (${t.date_depart})</span>
+                    <button onclick="deleteTrajet('${t._id}')" style="color:red;">Supprimer</button>
+                </div>
+            `).join('');
+        }
+
+        async function deleteUser(id) {
+            if(confirm("Supprimer l'utilisateur ?")) {
+                await fetch('/api/admin/users/' + id, { method: 'DELETE' });
+                loadUsers();
+            }
+        }
+
+        async function deleteTrajet(id) {
+            if(confirm("Supprimer ce trajet ?")) {
+                await fetch('/api/admin/trajets/' + id, { method: 'DELETE' });
+                loadTrajets();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        loadUsers();
+        loadTrajets();
+    </script>
+</body>
+</html>

@@ -1,9 +1,15 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const Trajet = require('./model/Trajet');
+const User = require('./model/User'); // <-- AJOUT
 
 const dbUrl = process.env.MONGO_URI;
 
+// COMPTES PAR DÉFAUT
+const usersInitiaux = [
+    { nom_complet: "Admin Principal", email: "admin@trains.fr", password: "admin", role: "admin" },
+    { nom_complet: "Jean Adhérent", email: "jean@trains.fr", password: "password", role: "adherent" }
+];
 // LES TRAJETS MANUELS
 const trajetsManuels = [
     {

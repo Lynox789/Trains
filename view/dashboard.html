@@ -18,11 +18,9 @@
             <a href="#">Billets</a>
             <a href="#">Compte</a>
             <a href="#">Contact</a>
-            <button class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
-
+            <button class="btn-member" id="btn-auth"><img src="img/Member.svg" alt="">Espace Adhérent</button>
         </nav>
         <div class="navbar_right">
-            <!-- From Uiverse.io by chicogale -->
             <div class="cyber-toggle-wrapper">
                 <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
                 <label class="cyber-toggle" for="cyber-toggle">
@@ -76,6 +74,13 @@
             </div>
         </section>
 
+        <section style="margin-top: 50px; margin-bottom: 50px;">
+            <h2 class="Titre_principal" style="font-size: 1.8rem;">Mes Billets</h2>
+            <div id="mes-billets-list" style="display: grid; gap: 15px; margin-top: 20px;">
+                <p style="color: var(--text-color);">Chargement de vos voyages...</p>
+            </div>
+        </section>
+
         <section class="infinite-carousel">
             <h2 class="carousel-title">Destinations de vacances en France</h2>
             <div class="carousel-viewport">
@@ -96,8 +101,61 @@
         </section>
     </main>
     <div id="focus-overlay"></div>
-</body>
-<script src="../js/theme.js"></script>
-<script src="../js/dashboard.js"></script>
 
+    <script src="../js/theme.js"></script>
+    <script src="../js/dashboard.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            // 1. Redirection si non connecté
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Gestion du bouton de navigation (Afficher le nom et permettre la déconnexion)
+            const btnAuth = document.getElementById('btn-auth');
+            if(btnAuth) {
+                btnAuth.innerHTML = `<img src="img/Member.svg" alt=""> ${user.nom_complet} (Déconnexion)`;
+                btnAuth.style.cursor = "pointer";
+                btnAuth.addEventListener('click', () => {
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                });
+            }
+
+            // 3. Récupération et affichage des billets
+            const conteneurBillets = document.getElementById('mes-billets-list');
+
+            try {
+                const res = await fetch(`/api/users/${user.id}/billets`);
+                const billets = await res.json();
+
+                if (billets.length === 0) {
+                    conteneurBillets.innerHTML = "<p style='color: var(--text-color);'>Vous n'avez acheté aucun billet pour le moment.</p>";
+                    return;
+                }
+
+                // Affichage dynamique des billets avec les couleurs du thème
+                conteneurBillets.innerHTML = billets.map(b => `
+                    <div style="background: var(--surface-color); padding: 20px; border-radius: 10px; border-left: 5px solid var(--primary-color); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--text-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <h3 style="margin: 0;">${b.depart} ➔ ${b.arrivee}</h3>
+                            <span style="background: var(--primary-color); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold;">${b.prix_total} €</span>
+                        </div>
+                        <p style="margin: 5px 0;"><strong>Référence :</strong> ${b.reference}</p>
+                        <p style="margin: 5px 0;"><strong>Départ :</strong> Le ${b.date} à ${b.heure_depart}</p>
+                        <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">Acheté le ${new Date(b.date_achat).toLocaleDateString('fr-FR')}</p>
+                    </div>
+                `).join('');
+
+            } catch(err) {
+                conteneurBillets.innerHTML = "<p style='color:red;'>Erreur lors du chargement de vos billets.</p>";
+                console.error(err);
+            }
+        });
+    </script>
+</body>
 </html>
