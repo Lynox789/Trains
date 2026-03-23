@@ -62,7 +62,7 @@ function genererDates(nombreDeJours) {
 }
 
 // CHOISIR LE NOMBRE DE JOURS (Ex: 30 jours, soit 1 mois de trajets)
-const dates = genererDates(30); 
+const dates = genererDates(100); 
 
 
 // LES GRANDES LIGNES
