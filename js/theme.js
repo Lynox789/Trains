@@ -27,3 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+ 
+let menuOpen = false;
+
+function toggleMenu() {
+    menuOpen = !menuOpen;
+    document.getElementById('nav-mobile').classList.toggle('open', menuOpen);
+}
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 830) {
+        menuOpen = false;
+        document.getElementById('nav-mobile').classList.remove('open');
+    }
+});

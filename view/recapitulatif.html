@@ -9,17 +9,17 @@
 </head>
 <body>
     <header class="navbar">
-        <div class="logo"><img src="img/Logo.svg" alt=""></div>
+        <div class="logo"><img src="img/Logo.svg" alt="europe.transports"></div>
         <nav>
-            <a href="dashboard.html">Voyager</a>
-            <a href="#">Billets</a>
-            <a href="#">Compte</a>
-            <a href="#">Contact</a>
-            <button class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
-
+            <div class="nav-links">
+                <a href="dashboard.html">Voyager</a>
+                <a href="#">Billets</a>
+                <a href="#">Compte</a>
+                <a href="#">Contact</a>
+                <button id="btn-auth" class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+            </div>
         </nav>
         <div class="navbar_right">
-            <!-- From Uiverse.io by chicogale -->
             <div class="cyber-toggle-wrapper">
                 <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
                 <label class="cyber-toggle" for="cyber-toggle">
@@ -36,9 +36,7 @@
                         <div class="cyber-toggle-thumb-highlight"></div>
                         <div class="cyber-toggle-thumb-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z">
-                                </path>
+                                <path d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
                             </svg>
                         </div>
                     </div>
@@ -54,8 +52,22 @@
                     <span class="cyber-toggle-label-on">Light</span>
                 </div>
             </div>
+            <!-- Burger mobile -->
+            <button class="nav-burger" id="burger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
+    <!-- Menu mobile (hors header) -->
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="dashboard.html">Voyager</a>
+        <a href="#">Billets</a>
+        <a href="#">Compte</a>
+        <a href="#">Contact</a>
+        <button id="btn-auth-mobile" class="btn-member">
+            <img src="img/Member.svg" alt="">Espace Adhérent
+        </button>
+    </div>
 
     <main class="container">
         <h1 class="Titre_principal">Vérifiez votre commande</h1>
@@ -82,5 +94,6 @@
 
     <script src="../js/theme.js"></script>
     <script src="../js/recapitulatif.js"></script>
+    <script src="../js/logout.js"></script>
 </body>
 </html>

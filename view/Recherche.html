@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>europe.transports | Réservation TGV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/theme.css">
     <link rel="stylesheet" href="../css/recherche.css">
 </head>
@@ -12,17 +14,17 @@
 <body>
 
     <header class="navbar">
-        <div class="logo"><img src="img/Logo.svg" alt=""></div>
+        <div class="logo"><img src="img/Logo.svg" alt="europe.transports"></div>
         <nav>
-            <a href="dashboard.html">Voyager</a>
-            <a href="#">Billets</a>
-            <a href="#">Compte</a>
-            <a href="#">Contact</a>
-            <button class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
-
+            <div class="nav-links">
+                <a href="dashboard.html">Voyager</a>
+                <a href="#">Billets</a>
+                <a href="#">Compte</a>
+                <a href="#">Contact</a>
+                <button id="btn-auth" class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+            </div>
         </nav>
         <div class="navbar_right">
-            <!-- From Uiverse.io by chicogale -->
             <div class="cyber-toggle-wrapper">
                 <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
                 <label class="cyber-toggle" for="cyber-toggle">
@@ -39,9 +41,7 @@
                         <div class="cyber-toggle-thumb-highlight"></div>
                         <div class="cyber-toggle-thumb-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z">
-                                </path>
+                                <path d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
                             </svg>
                         </div>
                     </div>
@@ -57,45 +57,98 @@
                     <span class="cyber-toggle-label-on">Light</span>
                 </div>
             </div>
+            <!-- Burger mobile -->
+            <button class="nav-burger" id="burger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
-
+    <!-- Menu mobile (hors header) -->
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="dashboard.html">Voyager</a>
+        <a href="#">Billets</a>
+        <a href="#">Compte</a>
+        <a href="#">Contact</a>
+        <button id="btn-auth-mobile" class="btn-member">
+            <img src="img/Member.svg" alt="">Espace Adhérent
+        </button>
+    </div>
 
     <main class="container">
-        <section class="Recherche">
-            <div class="Recherche_container">
-                <h1 class="Titre_principal">Rechercher une destination</h1>
 
-                <div class="lieu_depart input-wrapper">
-                    <input type="text" id="lieu_depart" placeholder="Lieu de départ" autocomplete="off">
-                    <div id="suggestions-depart" class="suggestions-box"></div>
+        <!-- EN-TÊTE PAGE -->
+        <div class="page-eyebrow"><span class="eyebrow-dot"></span>Réservation TGV</div>
+        <h1 class="page-title">Où souhaitez-vous<br><span>voyager ?</span></h1>
+        <p class="page-sub">Trouvez et réservez votre trajet en quelques secondes.</p>
+
+        <div class="search-card">
+
+            <!-- TRAJET -->
+            <div class="trajet-row">
+                <div class="trajet-field">
+                    <span class="field-label">Départ</span>
+                    <div class="input-wrapper field-wrap">
+                        <span class="field-icon">↑</span>
+                        <input type="text" id="lieu_depart" class="field-input" placeholder="Ville ou gare de départ" autocomplete="off">
+                        <div id="suggestions-depart" class="suggestions-box"></div>
+                    </div>
                 </div>
-                <div class="lieu_arrivee input-wrapper">
-                    <input type="text" id="lieu_arrivee" placeholder="Lieu d'arrivée" autocomplete="off">
-                    <button id="btn_reverse"><img src="img/deuxFleche.svg" alt=""></button>
-                    <div id="suggestions-arrivee" class="suggestions-box"></div>
+                <div class="trajet-swap-col">
+                    <button id="btn_reverse" class="btn-swap" title="Inverser">⇄</button>
                 </div>
-                <div class="date">
-                    <input type="date" id="date_depart">
-                    <input type="date" id="date_retour">
+                <div class="trajet-field">
+                    <span class="field-label">Arrivée</span>
+                    <div class="input-wrapper field-wrap">
+                        <span class="field-icon">↓</span>
+                        <input type="text" id="lieu_arrivee" class="field-input" placeholder="Ville ou gare d'arrivée" autocomplete="off">
+                        <div id="suggestions-arrivee" class="suggestions-box"></div>
+                    </div>
                 </div>
-                <h3>Combien de personne ?</h3>
-                <div class="nbr_personne" id="btn-ajouter-voyageur" style="cursor: pointer;">
-                    <img src="img/Member.svg" alt="">
-                    <span id="compteur-voyageurs">0</span>
-                    <img src="img/plus.svg" alt="">
-                </div>
-                <div id="container-voyageurs"></div>
-                <button class="btn-recherche" onclick="rechercher()">Voir les trajets</button>
             </div>
-            <div class="image">
-                <img src="img/Montagne.svg" alt="">
+
+            <!-- DATES -->
+            <div>
+                <span class="field-label">Date de départ</span>
+                <div class="field-wrap">
+                    <input type="date" id="date_depart" class="field-input no-icon">
+                </div>
             </div>
-        </section>
+            <div>
+                <span class="field-label">Date de retour <span style="opacity:0.4;font-weight:300;text-transform:none">(optionnel)</span></span>
+                <div class="field-wrap">
+                    <input type="date" id="date_retour" class="field-input no-icon">
+                </div>
+            </div>
+
+            <!-- VOYAGEURS -->
+            <div class="voyageurs-section">
+                <span class="field-label">Voyageurs</span>
+                <div class="counter-row">
+                    <div class="counter-pill">
+                        <button class="counter-btn" onclick="removeV()">−</button>
+                        <span class="counter-val" id="compteur-voyageurs">0</span>
+                        <button class="counter-btn" onclick="addV()">+</button>
+                    </div>
+                    <span class="counter-label" id="counter-label">Aucun voyageur</span>
+                </div>
+                <div id="container-voyageurs" class="voyageurs-list"></div>
+            </div>
+
+            <!-- CTA -->
+            <div class="bottom-row">
+                <button class="btn-search" onclick="rechercher()">
+                    Voir les trajets
+                    <span class="btn-search-arrow">→</span>
+                </button>
+            </div>
+
+        </div>
     </main>
+
+    <script src="../js/theme.js"></script>
+    <script src="../js/nbr_passenger.js"></script>
+    <script src="../js/reverse_place.js"></script>
+    <script src="../js/recherche.js"></script>
+    <script src="../js/logout.js"></script>
 </body>
-<script src="../js/theme.js"></script>
-<script src="../js/nbr_passenger.js"></script>
-<script src="../js/reverse_place.js"></script>
-<script src="../js/recherche.js"></script>
 </html>

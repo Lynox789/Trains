@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         clearInterval(interval); // On arrête le timer
         
-        document.querySelector('.btn-payer').style.display = 'none';
+        document.querySelector('.btn-checkout').style.display = 'none';
         document.getElementById('loading').style.display = 'block';
 
         // EPIC 6 - Tâche 3 : Attente de réception du n° d'autorisation de la banque
