@@ -3,7 +3,6 @@
 .vscode/
 
 #ignore database connexion file
-
 connexion/Database.php
 
 # Local data files
