@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +7,13 @@
     <link rel="stylesheet" href="../css/theme.css">
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
-
 <body>
 
     <header class="navbar">
         <div class="logo"><img src="img/Logo.svg" alt=""></div>
         <nav>
             <a href="dashboard.html">Voyager</a>
-            <a href="#">Billets</a>
+            <a href="billet.html">Billets</a>
             <a href="#">Compte</a>
             <a href="#">Contact</a>
             <button class="btn-member" id="btn-auth"><img src="img/Member.svg" alt="">Espace Adhérent</button>
@@ -37,9 +35,7 @@
                         <div class="cyber-toggle-thumb-highlight"></div>
                         <div class="cyber-toggle-thumb-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path
-                                    d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z">
-                                </path>
+                                <path d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z"></path>
                             </svg>
                         </div>
                     </div>
@@ -74,14 +70,7 @@
             </div>
         </section>
 
-        <section style="margin-top: 50px; margin-bottom: 50px;">
-            <h2 class="Titre_principal" style="font-size: 1.8rem;">Mes Billets</h2>
-            <div id="mes-billets-list" style="display: grid; gap: 15px; margin-top: 20px;">
-                <p style="color: var(--text-color);">Chargement de vos voyages...</p>
-            </div>
-        </section>
-
-        <section class="infinite-carousel">
+        <section class="infinite-carousel" style="margin-top: 50px;">
             <h2 class="carousel-title">Destinations de vacances en France</h2>
             <div class="carousel-viewport">
                 <div class="carousel-track">
@@ -106,16 +95,14 @@
     <script src="../js/dashboard.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const user = JSON.parse(localStorage.getItem('user'));
-            
-            // 1. Redirection si non connecté
+
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // 2. Gestion du bouton de navigation (Afficher le nom et permettre la déconnexion)
             const btnAuth = document.getElementById('btn-auth');
             if(btnAuth) {
                 btnAuth.innerHTML = `<img src="img/Member.svg" alt=""> ${user.nom_complet} (Déconnexion)`;
@@ -124,36 +111,6 @@
                     localStorage.removeItem('user');
                     window.location.href = 'login.html';
                 });
-            }
-
-            // 3. Récupération et affichage des billets
-            const conteneurBillets = document.getElementById('mes-billets-list');
-
-            try {
-                const res = await fetch(`/api/users/${user.id}/billets`);
-                const billets = await res.json();
-
-                if (billets.length === 0) {
-                    conteneurBillets.innerHTML = "<p style='color: var(--text-color);'>Vous n'avez acheté aucun billet pour le moment.</p>";
-                    return;
-                }
-
-                // Affichage dynamique des billets avec les couleurs du thème
-                conteneurBillets.innerHTML = billets.map(b => `
-                    <div style="background: var(--surface-color); padding: 20px; border-radius: 10px; border-left: 5px solid var(--primary-color); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--text-color);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <h3 style="margin: 0;">${b.depart} ➔ ${b.arrivee}</h3>
-                            <span style="background: var(--primary-color); color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold;">${b.prix_total} €</span>
-                        </div>
-                        <p style="margin: 5px 0;"><strong>Référence :</strong> ${b.reference}</p>
-                        <p style="margin: 5px 0;"><strong>Départ :</strong> Le ${b.date} à ${b.heure_depart}</p>
-                        <p style="margin: 5px 0; font-size: 0.8em; opacity: 0.7;">Acheté le ${new Date(b.date_achat).toLocaleDateString('fr-FR')}</p>
-                    </div>
-                `).join('');
-
-            } catch(err) {
-                conteneurBillets.innerHTML = "<p style='color:red;'>Erreur lors du chargement de vos billets.</p>";
-                console.error(err);
             }
         });
     </script>

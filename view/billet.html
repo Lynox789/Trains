@@ -3,24 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Votre Billet - europe.transports</title>
+    <title>Vos Billets - europe.transports</title>
     <link rel="stylesheet" href="../css/theme.css">
-    <style>
-        .container { max-width: 600px; margin: 40px auto; padding: 20px; }
-        .billet-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; }
-        .search-section { text-align: center; margin-bottom: 20px; }
-        .search-section input { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--glass); color: var(--text-color); }
-        .search-section button { padding: 10px 20px; border-radius: 8px; border: none; background: var(--accent-color); color: white; cursor: pointer; font-weight: bold; }
-        .ticket-info { background: var(--glass); padding: 20px; border-radius: 12px; margin-top: 20px; }
-        .action-btns { display: flex; gap: 15px; margin-top: 25px; justify-content: center; }
-        .btn-action { padding: 12px 20px; border-radius: 8px; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-action:hover { background: var(--accent-color); color: white; }
-    </style>
+    <link rel="stylesheet" href="../css/billet.css">
 </head>
 <body>
+
+    <header class="navbar">
+        <div class="logo"><img src="img/Logo.svg" alt=""></div>
+        <nav>
+            <a href="dashboard.html">Voyager</a>
+            <a href="billet.html" style="color: var(--accent-color);">Billets</a>
+            <a href="#">Compte</a>
+            <a href="#">Contact</a>
+            <button class="btn-member" id="btn-auth"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+        </nav>
+        <div class="navbar_right">
+            <div class="cyber-toggle-wrapper">
+                <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
+                <label class="cyber-toggle" for="cyber-toggle">
+                    <div class="cyber-toggle-track">
+                        <div class="cyber-toggle-track-glow"></div>
+                        <div class="cyber-toggle-track-dots">
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-thumb">
+                        <div class="cyber-toggle-thumb-shadow"></div>
+                        <div class="cyber-toggle-thumb-highlight"></div>
+                        <div class="cyber-toggle-thumb-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-particles">
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                    </div>
+                </label>
+                <div class="cyber-toggle-labels">
+                    <span class="cyber-toggle-label-off">Dark</span>
+                    <span class="cyber-toggle-label-on">Light</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <main class="container">
+        
         <div class="billet-card">
-            <h1 class="Titre_principal" style="text-align: center;">Édition de Billet</h1>
+            <h1 class="Titre_principal" style="font-size: 2.2rem; margin-bottom: 30px;">Édition de Billet</h1>
             
             <div class="search-section" id="search-section">
                 <input type="text" id="input-ref" placeholder="Saisir votre n° de résa (RES-...)">
@@ -28,8 +65,7 @@
             </div>
 
             <div id="ticket-result" style="display: none;">
-                <div class="ticket-info" id="ticket-content">
-                    </div>
+                <div class="ticket-info" id="ticket-content"></div>
                 
                 <div class="action-btns">
                     <button class="btn-action" onclick="envoyerMail()">Envoyer par Mail</button>
@@ -37,38 +73,92 @@
                 </div>
             </div>
         </div>
+
+        <div>
+            <h2 class="Titre_principal" style="font-size: 2.2rem; text-align: left; margin-bottom: 20px;">Historique de mes voyages</h2>
+            <div id="mes-billets-list" class="billets-grid">
+                <p style="color: var(--text-color); opacity: 0.8;">Chargement de vos voyages...</p>
+            </div>
+        </div>
+
     </main>
 
+    <script src="../js/theme.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const btnAuth = document.getElementById('btn-auth');
+            if(btnAuth) {
+                btnAuth.innerHTML = `<img src="img/Member.svg" alt=""> ${user.nom_complet} (Déconnexion)`;
+                btnAuth.addEventListener('click', () => {
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                });
+            }
+
+            const conteneurBillets = document.getElementById('mes-billets-list');
+
+            try {
+                const res = await fetch(`/api/users/${user.id}/billets`);
+                const billets = await res.json();
+
+                if (billets.length === 0) {
+                    conteneurBillets.innerHTML = "<p>Vous n'avez acheté aucun billet pour le moment.</p>";
+                    return;
+                }
+
+                conteneurBillets.innerHTML = billets.map(b => `
+                    <div class="billet-item">
+                        <div class="billet-header">
+                            <h3>${b.depart} ➔ ${b.arrivee}</h3>
+                            <span class="billet-price">${b.prix_total} €</span>
+                        </div>
+                        <div class="billet-details">
+                            <p><strong>Référence :</strong> ${b.reference}</p>
+                            <p><strong>Départ :</strong> Le ${b.date} à ${b.heure_depart}</p>
+                            <span class="billet-date">Acheté le ${new Date(b.date_achat).toLocaleDateString('fr-FR')}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch(err) {
+                conteneurBillets.innerHTML = "<p style='color:#ef4444;'>Erreur lors du chargement de vos billets.</p>";
+                console.error(err);
+            }
+        });
+
         function rechercherBillet() {
             const inputRef = document.getElementById('input-ref').value;
             const currentRef = localStorage.getItem('current_ref');
             
-            // Si on vient juste de payer ou si on tape la bonne référence
             if (inputRef === currentRef || (!inputRef && currentRef)) {
                 document.getElementById('search-section').style.display = 'none';
                 document.getElementById('ticket-result').style.display = 'block';
                 
                 const aller = JSON.parse(localStorage.getItem('panier_aller'));
                 document.getElementById('ticket-content').innerHTML = `
-                    <h3 style="color: var(--accent-color); margin-bottom: 15px;">Réservation confirmée</h3>
+                    <h3 style="color: var(--accent-color); margin-bottom: 20px; font-size: 1.4rem;">Réservation confirmée</h3>
                     <p><strong>Référence :</strong> ${currentRef}</p>
                     <p><strong>Trajet :</strong> ${aller.depart || aller.gare_depart} ➔ ${aller.arrivee || aller.gare_arrivee}</p>
                     <p><strong>Date :</strong> ${aller.date || aller.date_depart}</p>
                     <p><strong>Heure de départ :</strong> ${aller.heure_depart}</p>
-                    <p><strong>Prix Total :</strong> ${aller.prix_total} €</p>
+                    <p style="margin-top: 15px; font-size: 1.2rem;"><strong>Prix Total :</strong> <span style="color: var(--accent-color); font-weight: bold;">${aller.prix_total} €</span></p>
                 `;
             } else {
-                alert("Numéro de réservation introuvable.");
+                alert("Numéro de réservation introuvable dans la session courante.");
             }
         }
 
         function envoyerMail() {
-            // Simulation de l'envoi de mail (Tâche 2)
             alert("Votre billet a bien été envoyé à votre adresse email !");
         }
 
-        // Auto-chargement si l'utilisateur vient de la page de paiement
         if(document.referrer.includes('payer.html')) {
             document.getElementById('input-ref').value = localStorage.getItem('current_ref');
             rechercherBillet();

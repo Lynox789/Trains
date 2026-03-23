@@ -1,4 +1,20 @@
-/* Animation héritée de ton design */
+/* Héritage de l'apparence générale du thème */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -10,180 +26,124 @@
     }
 }
 
-/* Conteneur principal */
-.container {
-    max-width: 600px;
-    margin: 60px auto;
-    padding: 20px;
-    animation: fadeIn 0.6s ease-out;
-    animation-fill-mode: forwards;
-}
-
-/* Cartes (Paiement et Billet) calquées sur ta .login-form-container */
-.payment-card, .billet-card {
-    background-color: #2d3748;
-    border: 1px solid #4A5568;
-    border-radius: 8px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    color: #FFFFFF;
-}
-
-/* Titres */
+/* Titre de la page */
 .Titre_principal {
-    font-size: 2rem;
-    color: #FFFFFF;
     text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
     margin-bottom: 30px;
 }
 
-/* --- SECTION PAIEMENT --- */
+/* Carte de paiement (calquée sur cart-sidebar de dashboard.css) */
+.payment-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+/* Infos de paiement */
 .timer {
     font-size: 2rem;
-    color: #ef4444; /* Rouge pour l'urgence */
+    color: #ef4444; /* Rouge d'urgence conservé */
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: 800;
+    margin-bottom: 10px;
+    font-weight: 900;
 }
 
 .ref-resa {
     text-align: center;
     font-size: 1.1rem;
     margin-bottom: 25px;
-    color: #A0AEC0;
+    color: var(--text-color);
+    opacity: 0.8;
 }
 
-/* Formulaires : repris exactement de ton style */
+/* Section Prix Total (Calqué sur dashboard.css) */
+.total-section {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 0;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.total-price {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent-color);
+}
+
+/* Formulaires */
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #A0AEC0;
+    color: var(--text-color);
+    opacity: 0.9;
 }
 
-.form-group input, 
-.search-section input {
+/* Champs de saisie (calqués sur l'input de recherche) */
+.form-group input {
     width: 100%;
     padding: 15px;
-    border: 1px solid #4A5568;
-    border-radius: 5px;
-    font-size: 1rem;
-    background-color: #1A202C;
-    color: #E2E8F0;
+    background: var(--glass);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    outline: none;
+    backdrop-filter: blur(10px);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-group input:focus, 
-.search-section input:focus {
-    outline: none;
-    border-color: #3182CE;
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
+.form-group input:focus {
+    border-color: var(--accent-color);
+    /* Lueur subtile reprenant la couleur du thème (fallback si non définie) */
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2); 
 }
 
 .row-inputs {
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
-/* Boutons principaux calqués sur ton .btn-submit */
-.btn-payer, 
-.search-section button {
+/* Bouton principal (Calqué sur btn-checkout du dashboard) */
+.btn-checkout {
     width: 100%;
-    padding: 15px;
-    background-color: #3182CE;
-    color: white;
+    padding: 18px;
+    background: var(--accent-color);
+    color: #FFFFFF;
     border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    font-weight: 700;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-top: 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(49, 130, 206, 0.3);
-    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: opacity 0.3s ease, transform 0.2s ease;
 }
 
-.btn-payer:hover, 
-.search-section button:hover {
-    background-color: #2B6CB0;
+.btn-checkout:hover {
+    opacity: 0.9;
     transform: translateY(-2px);
 }
 
+/* Loading */
 #loading {
     display: none;
     text-align: center;
     margin-top: 20px;
-    color: #6ee7b7; /* Vert succès */
+    color: var(--accent-color);
     font-weight: 600;
     animation: fadeIn 0.3s ease;
-}
-
-/* --- SECTION BILLET --- */
-.search-section {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
-}
-
-.search-section button {
-    width: auto;
-    margin-top: 0;
-    padding: 0 25px;
-}
-
-/* Contenu du billet */
-.ticket-info {
-    background-color: #1A202C;
-    border: 1px solid #4A5568;
-    padding: 25px;
-    border-radius: 8px;
-    margin-top: 20px;
-    color: #E2E8F0;
-    animation: fadeIn 0.4s ease-out;
-}
-
-.ticket-info h3 {
-    color: #3182CE;
-    margin-top: 0;
-    border-bottom: 1px solid #4A5568;
-    padding-bottom: 10px;
-}
-
-.ticket-info p {
-    margin: 10px 0;
-    font-size: 1.05rem;
-}
-
-.ticket-info strong {
-    color: #FFFFFF;
-}
-
-/* Boutons d'action secondaires */
-.action-btns {
-    display: flex;
-    gap: 15px;
-    margin-top: 25px;
-    justify-content: center;
-}
-
-.btn-action {
-    flex: 1;
-    padding: 12px 20px;
-    border-radius: 5px;
-    border: 2px solid #3182CE;
-    background: transparent;
-    color: #3182CE;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-}
-
-.btn-action:hover {
-    background-color: #3182CE;
-    color: white;
-    transform: translateY(-2px);
 }
