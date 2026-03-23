@@ -97,18 +97,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const user = JSON.parse(localStorage.getItem('user'));
-
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
             const btnAuth = document.getElementById('btn-auth');
-            if(btnAuth) {
-                btnAuth.innerHTML = `<img src="img/Member.svg" alt=""> ${user.nom_complet} (Déconnexion)`;
-                btnAuth.style.cursor = "pointer";
+
+            if (user && btnAuth) {
+                // Utilisateur connecté 
+                // On change le texte et on applique une nouvelle classe CSS
+                btnAuth.innerHTML = `${user.nom_complet} | Déconnexion`;
+                btnAuth.className = "btn-logout"; 
+                
                 btnAuth.addEventListener('click', () => {
                     localStorage.removeItem('user');
+                    window.location.reload(); // Rafraîchit la page en mode "non connecté"
+                });
+            } else if (btnAuth) {
+                // Utilisateur non connecté 
+                // Le bouton garde son style de base "Espace Adhérent"
+                btnAuth.addEventListener('click', () => {
                     window.location.href = 'login.html';
                 });
             }
