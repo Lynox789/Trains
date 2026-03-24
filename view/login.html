@@ -110,8 +110,12 @@
         const data = await res.json();
 
         if (data.success) {
-            localStorage.setItem('user', JSON.stringify(data.user));
-            // Redirection selon le rôle
+        localStorage.setItem('user', JSON.stringify({ 
+            id: data.id, 
+            nom_complet: data.nom_complet,
+            email: data.email 
+        }));            
+        // Redirection selon le rôle
             if (data.user.role === 'admin') {
                 window.location.href = 'admin.html';
             } else {

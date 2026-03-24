@@ -2,16 +2,30 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Trajet = require('./model/Trajet');
 const User = require('./model/User');
+const Reservation = require('./model/Reservation');
 
 const dbUrl = process.env.MONGO_URI;
 
 // ══════════════════════════════════════════
 //  COMPTES PAR DÉFAUT
 // ══════════════════════════════════════════
-const usersInitiaux = [
-    { nom_complet: "Admin Principal", email: "admin@trains.fr",  password: "admin",    role: "admin"    },
-    { nom_complet: "Jean Adhérent",   email: "jean@trains.fr",   password: "password", role: "adherent" }
-];
+const bcrypt = require('bcrypt');
+
+// Remplace usersInitiaux par une fonction async
+async function creerUsers() {
+    const users = [
+        { nom_complet: "Admin Principal", email: "admin@trains.fr",  password: await bcrypt.hash("admin",    12), role: "admin"    },
+        { nom_complet: "Jean Adhérent",   email: "jean@trains.fr",   password: await bcrypt.hash("password", 12), role: "adherent" }
+    ];
+    
+    const nbUsers = await User.countDocuments();
+    if (nbUsers === 0) {
+        await User.insertMany(users);
+        console.log(`${users.length} utilisateurs créés avec passwords hashés.`);
+    } else {
+        console.log(`Users déjà présents (${nbUsers}), non écrasés.`);
+    }
+}
 
 // ══════════════════════════════════════════
 //  GÉNÉRATION DES VOITURES AVEC PLACES
@@ -218,18 +232,14 @@ mongoose.connect(dbUrl)
 
         // Trajets
         await Trajet.deleteMany({});
+        await Reservation.deleteMany({});
+        await User.deleteMany({});
         console.log('Ancienne collection Trajet effacée.');
         await Trajet.insertMany(seedFinal);
         console.log(`${seedFinal.length} trajets insérés.`);
 
-        // Users (seulement si la collection est vide)
-        const nbUsers = await User.countDocuments();
-        if (nbUsers === 0) {
-            await User.insertMany(usersInitiaux);
-            console.log(`${usersInitiaux.length} utilisateurs créés.`);
-        } else {
-            console.log(`Users déjà présents (${nbUsers}), non écrasés.`);
-        }
+        await creerUsers();
+
 
         console.log("\n------------------------------------------------");
         console.log("SUCCÈS !");

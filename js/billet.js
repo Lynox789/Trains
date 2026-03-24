@@ -316,7 +316,7 @@ function telechargerPDF(index) {
     doc.save(`billet-${data.type}-${data.reference}.pdf`);
 }
 
-// ── Envoyer par mail 
+// ── Envoyer par mail (Mise à jour pour EmailJS via backend)
 async function envoyerMail(index) {
     const data = billetsData[index];
     if (!data) return;
@@ -326,12 +326,23 @@ async function envoyerMail(index) {
     btn.disabled = true;
 
     try {
+        // Adaptation du payload "billet" pour matcher ce que notre backend EmailJS attend
+        const billetPayload = {
+            reference:    data.reference,
+            depart:       data.gare_depart,
+            arrivee:      data.gare_arrivee,
+            date:         data.date,
+            heure_depart: data.heure_depart,
+            prix_total:   data.prix_total,
+            nom_complet:  data.user_nom
+        };
+
         const res = await fetch('/api/send-ticket', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 email:  data.user_email,
-                billet: data
+                billet: billetPayload
             })
         });
 

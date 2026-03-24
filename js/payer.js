@@ -81,25 +81,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
  
+                // Préparation du Payload pour envoyer à server.js (et donc EmailJS)
                 const payload = {
                     userId:    user?.id   || null,
-                    email:     user?.email || 'test@trains.fr',
+                    email:     user?.email,
                     billet: {
-                        reference,
+                        reference:       reference,
                         num_reservation: reference,
                         type_trajet:     retour ? 'Aller-Retour' : 'Aller',
-                        billets,
+                        billets:         billets,
                         prix_total:      total,
                         nb_voyageurs:    voyageurs.length || 1,
-                        // pour rétrocompatibilité avec le mail
-                        depart:          billets[0]?.gare_depart  || '—',
-                        arrivee:         billets[0]?.gare_arrivee || '—',
+                        
+                        // Variables destinées au Mail (EmailJS)
+                        depart:          aller?.depart || aller?.gare_depart || '—',
+                        arrivee:         aller?.arrivee || aller?.gare_arrivee || '—',
                         date:            aller?.date || aller?.date_depart || '—',
                         heure_depart:    aller?.heure_depart || '—',
                         heure_arrivee:   aller?.heure_arrivee || '—',
-                        nom_complet:     user?.nom_complet || '',
+                        nom_complet:     user?.nom_complet || 'Voyageur',
+
                         paiement: {
-                            nom_titulaire:    document.getElementById('nom-carte')?.value || '',
+                            nom_titulaire:    document.getElementById('nom-carte')?.value || 'Inconnu',
                             numero_cb_masque: 'XXXX-XXXX-XXXX-' + (document.getElementById('num-carte')?.value?.slice(-4) || '0000'),
                             num_autorisation: numAuth,
                             date_paiement:    new Date().toISOString()
@@ -114,11 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
  
                 if (response.ok) {
+                    // Si le paiement est réussi ET le mail EmailJS envoyé
                     window.location.href = 'billet.html';
                 } else {
                     const errData = await response.json();
                     console.error('Erreur serveur :', errData);
-                    alert('Erreur lors de la sauvegarde.');
+                    alert('Erreur lors de la réservation ou de l\'envoi du mail.');
+                    
+                    // Réactiver le bouton pour réessayer
                     document.querySelector('.btn-checkout').style.display = 'block';
                     document.getElementById('loading').style.display = 'none';
                 }
@@ -126,6 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 console.error('Erreur :', err);
                 alert('Erreur de connexion au serveur.');
+                document.querySelector('.btn-checkout').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
             }
             
         }, 2500); 

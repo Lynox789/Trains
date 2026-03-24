@@ -4,7 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const Trajet = require('./model/Trajet');
-const { MailtrapClient} = require("mailtrap");
 const User = require('./model/User');
 const Reservation = require('./model/Reservation');
 
@@ -29,13 +28,15 @@ mongoose.connect(dbUrl)
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await User.findOne({ email, password });
-        if (user) {
-            res.json({ success: true, user: { id: user._id, nom_complet: user.nom_complet, role: user.role } });
-        } else {
-            res.status(401).json({ success: false, message: 'Email ou mot de passe incorrect' });
+        const user = await User.findOne({ email });
+
+        // Vérification avec bcrypt au lieu de comparer en clair
+        if (!user || !(await user.verifierPassword(password))) {
+            return res.status(401).json({ success: false, message: 'Email ou mot de passe incorrect' });
         }
-    } catch(err) {
+
+        res.json({ success: true, user: { id: user._id, nom_complet: user.nom_complet, role: user.role } });
+    } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -166,11 +167,10 @@ app.get('/api/gares', async (req,res) => {
   }
 });
 
-// Route envoi de billet (mailtrap)
+// Route envoi de billet (EmailJS)
 app.post('/api/send-ticket', async (req, res) => {
     try {
         const { userId, email, billet } = req.body;
-        const TOKEN = process.env.MAILTRAP_TOKEN;
  
         // Sauvegarde en BDD avec le nouveau modèle Reservation
         if (userId) {
@@ -192,55 +192,52 @@ app.post('/api/send-ticket', async (req, res) => {
             console.log('Réservation sauvegardée :', billet.reference);
         }
  
-        // Envoi mail Mailtrap 
-        const client = new MailtrapClient({ token: TOKEN, testInboxId: 4159625 });
-        const sender = { email: 'hello@example.com', name: 'TFT' };
- 
-        await client.testing.send({
-            from:     sender,
-            to:       [{ email }],
-            subject:  `Votre billet TFT - Réf: ${billet.reference}`,
-            category: 'Integration Test',
-            html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; padding: 0;">
-                <!-- En-tête -->
-                <div style="background: #0F172A; padding: 28px 32px; border-radius: 12px 12px 0 0;">
-                    <h1 style="color: #ffffff; font-size: 20px; margin: 0;">T<span style="color:#00D4FF">F</span>T</h1>
-                    <p style="color: #64748b; font-size: 13px; margin: 6px 0 0;">Confirmation de réservation</p>
-                </div>
-                <!-- Corps -->
-                <div style="background: #ffffff; padding: 32px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
-                    <p style="color: #0F172A; font-size: 16px; margin-bottom: 8px;">Bonjour <strong>${billet.nom_complet || 'Voyageur'}</strong>,</p>
-                    <p style="color: #475569; font-size: 14px;">Votre réservation est confirmée. Voici le récapitulatif :</p>
- 
-                    <div style="background: #f1f5f9; border-radius: 10px; padding: 20px; margin: 20px 0;">
-                        <p style="margin: 0 0 8px; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Référence</p>
-                        <p style="margin: 0 0 16px; font-size: 18px; font-weight: 700; color: #00D4FF;">${billet.reference}</p>
- 
-                        <p style="margin: 0 0 4px; font-size: 13px; color: #64748b;">Trajet</p>
-                        <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #0F172A;">${billet.depart} → ${billet.arrivee}</p>
- 
-                        <p style="margin: 0 0 4px; font-size: 13px; color: #64748b;">Date & heure</p>
-                        <p style="margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #0F172A;">${billet.date} à ${billet.heure_depart}</p>
- 
-                        <p style="margin: 0 0 4px; font-size: 13px; color: #64748b;">Prix total</p>
-                        <p style="margin: 0; font-size: 20px; font-weight: 700; color: #00D4FF;">${parseFloat(billet.prix_total).toFixed(2)} €</p>
-                    </div>
- 
-                    <p style="color: #475569; font-size: 13px;">Retrouvez votre billet dans l'espace "Billets" de votre compte.</p>
-                </div>
-                <!-- Pied -->
-                <div style="background: #f1f5f9; padding: 20px 32px; border-radius: 0 0 12px 12px; border: 1px solid #e2e8f0; border-top: none;">
-                    <p style="color: #94a3b8; font-size: 11px; margin: 0;">Ce mail est envoyé automatiquement. Merci de ne pas y répondre.</p>
-                </div>
-            </div>`
+        // Préparation de la requête EmailJS
+        const emailJsPayload = {
+            service_id: process.env.EMAILJS_SERVICE_ID,
+            template_id: process.env.EMAILJS_TEMPLATE_ID,
+            user_id: process.env.EMAILJS_PUBLIC_KEY,
+            accessToken: process.env.EMAILJS_PRIVATE_KEY,
+            template_params: {
+                to_email: req.body.email || 'thinojanpulendran@gmail.com', // Remplace par ta vraie adresse pour le test                nom_complet: billet.nom_complet || 'Voyageur',
+                reference: billet.reference || 'N/A',
+                depart: billet.depart || 'N/A',
+                arrivee: billet.arrivee || 'N/A',
+                date: billet.date || 'N/A',
+                heure_depart: billet.heure_depart || 'N/A',
+                prix_total: parseFloat(billet.prix_total || 0).toFixed(2)
+            }
+        };
+        console.log('Payload EmailJS:', JSON.stringify(emailJsPayload, null, 2));
+
+        console.log('Envoi EmailJS...');
+        console.log('Service:', process.env.EMAILJS_SERVICE_ID);
+        console.log('Template:', process.env.EMAILJS_TEMPLATE_ID);
+        console.log('Public Key:', process.env.EMAILJS_PUBLIC_KEY);
+
+        // Envoi de la requête via fetch (natif dans les versions récentes de Node.js)
+        const emailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(emailJsPayload)
         });
+
+        console.log('Status EmailJS:', emailResponse.status);
+        const responseText = await emailResponse.text();
+        console.log('Réponse EmailJS:', responseText);
+        
+        if (!emailResponse.ok) {
+            const errorText = await emailResponse.text();
+            throw new Error(`Erreur EmailJS: ${errorText}`);
+        }
  
-        res.status(200).json({ message: 'Réservation créée et mail envoyé.' });
+        res.status(200).json({ message: 'Réservation créée et mail envoyé via EmailJS.' });
  
     } catch (error) {
         console.error('Erreur /api/send-ticket :', error);
-        res.status(500).json({ error: 'Erreur lors de la commande' });
+        res.status(500).json({ error: 'Erreur lors de la commande ou de l\'envoi du mail' });
     }
 });
  
@@ -323,7 +320,7 @@ app.post('/api/train/:id/reserver-places', async (req, res) => {
 });
 
 
-//lancement serveur sur le port 500
+//lancement serveur sur le port 5000
 app.listen(port, () => {
   console.log(`Server initialized on http://localhost:${port}`);
 });

@@ -1,0 +1,167 @@
+/* --- STYLES GLOBAUX --- */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px; /* Plus large pour accueillir les deux colonnes */
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.Titre_principal {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 50px;
+}
+
+/* --- LAYOUT EN DEUX COLONNES --- */
+.contact-layout {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.team-section {
+    flex: 1.2; /* Prend un peu plus de place pour les 6 cartes */
+}
+
+.form-section {
+    flex: 1; /* Prend le reste de la place */
+    position: sticky;
+    top: 40px; /* Le formulaire reste à l'écran si on scrolle */
+}
+
+/* --- SECTION NOTRE ÉQUIPE (GAUCHE) --- */
+.team-section h2 {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.team-grid {
+    display: grid;
+    /* AJUSTEMENT : minmax augmenté de 160px à 200px pour des cartes plus larges */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 20px;
+}
+
+.team-member {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+}
+
+.member-avatar {
+    /* AJUSTEMENT : Taille augmentée de 100px à 140px */
+    width: 140px;
+    height: 140px;
+    border-radius: 12px; /* Image légèrement carrée arrondie */
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid var(--accent-color);
+    background: var(--glass);
+}
+
+.team-member h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+}
+
+.team-member p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* --- SECTION FORMULAIRE (DROITE) --- */
+.contact-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    background: var(--glass);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2); 
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 18px;
+    background: var(--accent-color);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* --- RESPONSIVE (MOBILES & PETITS ÉCRANS) --- */
+@media (max-width: 900px) {
+    .contact-layout {
+        flex-direction: column; /* On remet l'équipe au-dessus du formulaire sur mobile */
+    }
+    
+    .team-section, .form-section {
+        width: 100%;
+    }
+}
