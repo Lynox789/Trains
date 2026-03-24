@@ -4,12 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('ref-display').textContent = reference;
     localStorage.setItem('current_ref', reference); // Sauvegarde pour le billet
 
-    // Récupérer le prix total depuis le panier
+    // Calcul du prix total (aller + retour éventuel)
     let total = 0;
-    const aller = JSON.parse(localStorage.getItem('panier_aller'));
-    const retour = JSON.parse(localStorage.getItem('panier_retour'));
-    
-    if (aller) total += parseFloat(aller.prix_total || 0);
+    const aller  = JSON.parse(localStorage.getItem('panier_aller')  || 'null');
+    const retour = JSON.parse(localStorage.getItem('panier_retour') || 'null');
+    if (aller)  total += parseFloat(aller.prix_total  || 0);
     if (retour) total += parseFloat(retour.prix_total || 0);
     document.getElementById('total-pay').textContent = total.toFixed(2);
 
@@ -45,52 +44,88 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("Paiement autorisé ! N° d'autorisation de la banque : " + numAuth);
 
             try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                
-                // CORRECTION ICI : Sécurisation de la récupération des données
-                // On vérifie plusieurs noms de variables possibles pour éviter le "undefined"
-                const departFinal = aller ? (aller.gare_depart || aller.depart || 'Gare Inconnue') : 'Gare Inconnue';
-                const arriveeFinal = aller ? (aller.gare_arrivee || aller.arrivee || 'Gare Inconnue') : 'Gare Inconnue';
-                const dateFinal = aller ? (aller.date_depart || aller.date || 'Date Inconnue') : 'Date Inconnue';
-                const heureFinal = aller ? (aller.heure_depart || aller.heure || 'Heure Inconnue') : 'Heure Inconnue';
-
-                const detailsDuBillet = {
-                    reference: reference,
-                    depart: departFinal,
-                    arrivee: arriveeFinal,
-                    date: dateFinal,
-                    heure_depart: heureFinal,
-                    prix_total: total.toFixed(2)
+                const user      = JSON.parse(localStorage.getItem('user') || 'null');
+                const voyageurs = JSON.parse(localStorage.getItem('voyageurs') || '[]');
+                const places    = JSON.parse(localStorage.getItem('places_choisies') || 'null');
+ 
+                // ── Construire les billets 
+                const billets = [];
+                if (aller) {
+                    billets.push({
+                        num_billet:          'BIL-' + Date.now() + '-A',
+                        ref_train_id:        aller.id || aller._id || '',
+                        gare_depart:         aller.depart  || aller.gare_depart  || '—',
+                        gare_arrivee:        aller.arrivee || aller.gare_arrivee || '—',
+                        date_heure_depart:   (aller.date || aller.date_depart || '') + 'T' + (aller.heure_depart || '00:00'),
+                        date_heure_arrivee:  (aller.date || aller.date_depart || '') + 'T' + (aller.heure_arrivee || '00:00'),
+                        prix_base:           aller.prix_base || 0,
+                        voiture:             places?.voiture || 1,
+                        places_choisies:     places?.places  || [],
+                        options_choisies:    aller.options
+                            ? Object.keys(aller.options).map(k => ({ nom_option: k, prix_option: 0 }))
+                            : []
+                    });
+                }
+                if (retour) {
+                    billets.push({
+                        num_billet:          'BIL-' + Date.now() + '-R',
+                        ref_train_id:        retour.id || retour._id || '',
+                        gare_depart:         retour.depart  || retour.gare_depart  || '—',
+                        gare_arrivee:        retour.arrivee || retour.gare_arrivee || '—',
+                        date_heure_depart:   (retour.date || retour.date_depart || '') + 'T' + (retour.heure_depart || '00:00'),
+                        date_heure_arrivee:  (retour.date || retour.date_depart || '') + 'T' + (retour.heure_arrivee || '00:00'),
+                        prix_base:           retour.prix_base || 0,
+                        voiture:             1,
+                        places_choisies:     [],
+                        options_choisies:    []
+                    });
+                }
+ 
+                const payload = {
+                    userId:    user?.id   || null,
+                    email:     user?.email || 'test@trains.fr',
+                    billet: {
+                        reference,
+                        num_reservation: reference,
+                        type_trajet:     retour ? 'Aller-Retour' : 'Aller',
+                        billets,
+                        prix_total:      total,
+                        nb_voyageurs:    voyageurs.length || 1,
+                        // pour rétrocompatibilité avec le mail
+                        depart:          billets[0]?.gare_depart  || '—',
+                        arrivee:         billets[0]?.gare_arrivee || '—',
+                        date:            aller?.date || aller?.date_depart || '—',
+                        heure_depart:    aller?.heure_depart || '—',
+                        heure_arrivee:   aller?.heure_arrivee || '—',
+                        nom_complet:     user?.nom_complet || '',
+                        paiement: {
+                            nom_titulaire:    document.getElementById('nom-carte')?.value || '',
+                            numero_cb_masque: 'XXXX-XXXX-XXXX-' + (document.getElementById('num-carte')?.value?.slice(-4) || '0000'),
+                            num_autorisation: numAuth,
+                            date_paiement:    new Date().toISOString()
+                        }
+                    }
                 };
-
-                const emailSaisi = user ? user.email : "test@trains.fr";
-
-                // Envoi des données au serveur
+ 
                 const response = await fetch('/api/send-ticket', {
-                    method: 'POST',
+                    method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: user ? user.id : null,
-                        email: emailSaisi,
-                        billet: detailsDuBillet
-                    })
+                    body:    JSON.stringify(payload)
                 });
-
+ 
                 if (response.ok) {
-                    // Si le serveur a bien sauvegardé le billet, on redirige vers le ticket !
-                    window.location.href = 'billet.html'; 
+                    window.location.href = 'billet.html';
                 } else {
-                    const erreurData = await response.json();
-                    console.error("Détails erreur serveur :", erreurData);
-                    alert("Erreur lors de la sauvegarde du billet.");
-                    // Réaffichage des boutons si erreur
-                    document.querySelector('.btn-payer').style.display = 'block';
+                    const errData = await response.json();
+                    console.error('Erreur serveur :', errData);
+                    alert('Erreur lors de la sauvegarde.');
+                    document.querySelector('.btn-checkout').style.display = 'block';
                     document.getElementById('loading').style.display = 'none';
                 }
-
-            } catch (erreur) {
-                console.error("Erreur serveur :", erreur);
-                alert("Erreur lors de la connexion au serveur.");
+ 
+            } catch (err) {
+                console.error('Erreur :', err);
+                alert('Erreur de connexion au serveur.');
             }
             
         }, 2500); 

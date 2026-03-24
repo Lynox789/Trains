@@ -1,168 +1,492 @@
-/* global*/
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'Inter', sans-serif;
+    font-family: 'DM Sans', 'Inter', sans-serif;
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.Titre_principal {
-    text-align: center;
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 30px;
+/* CONTAINER*/
+.container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 52px 40px 80px;
 }
 
-/* principal */
-.container { 
-    max-width: 800px; 
-    margin: 40px auto; 
-    padding: 20px; 
+.page-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
 }
 
-.billet-card { 
-    background: var(--surface-color); 
-    border: 1px solid var(--border-color); 
-    border-radius: 24px; 
-    padding: 40px; 
-    margin-bottom: 50px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+.eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    animation: pulse 2s infinite;
 }
 
-.search-section { 
-    display: flex; 
-    gap: 15px; 
-    justify-content: center; 
-    margin-bottom: 20px; 
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: 0.4
+    }
 }
 
-.search-section input { 
-    width: 60%; 
-    padding: 15px; 
-    border-radius: 12px; 
-    border: 1px solid var(--border-color); 
-    background: var(--glass); 
-    color: var(--text-color); 
-    font-size: 1.1rem; 
-    outline: none; 
-    transition: border-color 0.2s; 
+.page-title {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--text-color);
+    margin-bottom: 32px;
 }
 
-.search-section input:focus { 
-    border-color: var(--accent-color); 
+.page-title span {
+    color: var(--accent-color);
 }
 
-.search-section button { 
-    padding: 15px 30px; 
-    border-radius: 12px; 
-    border: none; 
-    background: var(--accent-color); 
-    color: white; 
-    cursor: pointer; 
-    font-weight: bold; 
-    font-size: 1.1rem; 
-    transition: 0.2s; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+/* TICKET */
+.ticket-wrapper {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 40px rgba(0, 0, 0, 0.18);
+    margin-bottom: 24px;
+    max-width: 680px;
 }
 
-.search-section button:hover { 
-    transform: translateY(-2px); 
-    opacity: 0.9; 
+/* En-tête */
+.ticket-header {
+    background: #0F172A;
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.ticket-info { 
-    background: var(--glass); 
-    padding: 25px; 
-    border-radius: 16px; 
-    margin-top: 25px; 
-    border: 1px solid var(--border-color); 
-    font-size: 1.1rem; 
+.ticket-brand {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
 }
 
-.ticket-info p { 
-    margin: 10px 0; 
+.ticket-brand span {
+    color: var(--accent-color, #00D4FF);
 }
 
-.action-btns { 
-    display: flex; 
-    gap: 20px; 
-    margin-top: 30px; 
-    justify-content: center; 
+.ticket-ref {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-color, #00D4FF);
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
 }
 
-.btn-action { 
-    padding: 15px 25px; 
-    border-radius: 12px; 
-    border: 2px solid var(--accent-color); 
-    background: transparent; 
-    color: var(--accent-color); 
-    cursor: pointer; 
-    font-weight: bold; 
-    font-size: 1rem; 
-    transition: 0.3s; 
+/* Corps */
+.ticket-body {
+    padding: 28px 28px 20px;
 }
 
-.btn-action:hover { 
-    background: var(--accent-color); 
-    color: white; 
-    transform: translateY(-2px); 
+.ticket-trajet {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 24px;
 }
 
-.billets-grid { 
-    display: grid; 
-    gap: 20px; 
-    margin-top: 20px; 
+.ticket-gare {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+    max-width: 180px;
 }
 
-.billet-item { 
-    background: var(--surface-color); 
-    padding: 25px; 
-    border-radius: 16px; 
-    border-left: 6px solid var(--accent-color); 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-    color: var(--text-color); 
-    border-top: 1px solid var(--border-color); 
-    border-right: 1px solid var(--border-color); 
-    border-bottom: 1px solid var(--border-color); 
-    transition: transform 0.2s;
+.ticket-gare-right {
+    text-align: right;
 }
 
-.billet-item:hover { 
-    transform: translateY(-3px); 
+.ticket-heure {
+    font-family: 'Sora', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #0F172A;
+    line-height: 1;
 }
 
-.billet-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 15px; 
-    border-bottom: 1px solid var(--border-color); 
-    padding-bottom: 15px;
+.ticket-gare-nom {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    line-height: 1.3;
 }
 
-.billet-header h3 { 
-    margin: 0; 
-    font-size: 1.4rem; 
+.ticket-ligne {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
 }
 
-.billet-price { 
-    background: var(--accent-color); 
-    color: white; 
-    padding: 8px 15px; 
-    border-radius: 10px; 
-    font-weight: bold; 
-    font-size: 1.2rem;
+.ticket-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #0F172A;
+    flex-shrink: 0;
 }
 
-.billet-details p { 
-    margin: 8px 0; 
-    font-size: 1.05rem; 
+.ticket-bar {
+    flex: 1;
+    height: 2px;
+    background: #e2e8f0;
 }
 
-.billet-date { 
-    font-size: 0.9em; 
-    opacity: 0.6; 
-    margin-top: 15px !important; 
-    display: block; 
+.ticket-train-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--accent-color, #00D4FF);
+    flex-shrink: 0;
+}
+
+/* Grille infos */
+.ticket-infos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.ticket-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ticket-info-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.ticket-info-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.ticket-prix {
+    color: var(--accent-color, #00D4FF) !important;
+    font-size: 16px !important;
+}
+
+/* Séparation découpe */
+.ticket-tear {
+    display: flex;
+    align-items: center;
+    padding: 0 0;
+    position: relative;
+    margin: 0;
+}
+
+.tear-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--bg-color, #0F172A);
+    flex-shrink: 0;
+}
+
+.tear-line {
+    flex: 1;
+    border-top: 2px dashed #e2e8f0;
+}
+
+/* Pied du ticket */
+.ticket-footer {
+    padding: 20px 28px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.ticket-footer-info {
+    flex: 1;
+}
+
+.ticket-footer-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0F172A;
+    margin-bottom: 2px;
+}
+
+.ticket-footer-sub {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 14px;
+}
+
+/* Barcode simulée */
+.ticket-barcode {
+    display: flex;
+    gap: 2px;
+    height: 40px;
+    align-items: flex-end;
+}
+
+.ticket-barcode .bar {
+    background: #0F172A;
+    border-radius: 1px;
+}
+
+/* QR code */
+.ticket-qr {
+    flex-shrink: 0;
+}
+
+.ticket-qr canvas,
+.ticket-qr img {
+    border-radius: 8px;
+    border: 3px solid #f1f5f9;
+}
+
+/* ACTIONS BILLET */
+.ticket-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.btn-action-primary,
+.btn-action-secondary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-action-primary {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+}
+
+.btn-action-primary:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.btn-action-secondary {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-action-secondary:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* HISTORIQUE */
+.historique-section {
+    margin-top: 16px;
+}
+
+.billets-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.loading-msg {
+    font-size: 14px;
+    opacity: 0.5;
+    color: var(--text-color);
+}
+
+.billet-item {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px 24px;
+    transition: border-color 0.2s;
+    animation: fadeUp 0.2s ease;
+}
+
+.billet-item:hover {
+    border-color: var(--accent-color);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(6px)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+.billet-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-color);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.billet-trajet {
+    font-family: 'Sora', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.billet-trajet span {
+    color: var(--accent-color);
+    margin: 0 6px;
+}
+
+.billet-price {
+    font-family: 'Sora', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-color);
+    white-space: nowrap;
+}
+
+.billet-item-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.billet-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.billet-detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    opacity: 0.4;
+    color: var(--text-color);
+}
+
+.billet-detail-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.billet-ref-badge {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .nav-burger {
+        display: flex;
+    }
+
+    .navbar {
+        padding: 14px 20px;
+    }
+
+    .container {
+        padding: 32px 16px 60px;
+    }
+
+    .ticket-infos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ticket-trajet {
+        gap: 8px;
+    }
+
+    .ticket-heure {
+        font-size: 20px;
+    }
+
+    .ticket-gare-nom {
+        font-size: 10px;
+    }
+
+    .ticket-actions {
+        flex-direction: column;
+    }
+
+    .btn-action-primary,
+    .btn-action-secondary {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ticket-infos-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }

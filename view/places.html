@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vos Billets </title>
+    <title>europe.transports | Sélection des places</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/theme.css">
-    <link rel="stylesheet" href="../css/billet.css">
+    <link rel="stylesheet" href="../css/places.css">
 </head>
 <body>
 
-     <header class="navbar">
-        <div class="logo"><img src="img/Logo.svg" alt="TFT"></div>
+    <header class="navbar">
+        <div class="logo"><img src="img/Logo.svg" alt="europe.transports"></div>
         <nav>
             <div class="nav-links">
                 <a href="dashboard.html">Voyager</a>
@@ -75,31 +75,80 @@
 
     <main class="container">
 
-        <!-- ── BILLET CONFIRMATION ── -->
-        <div id="section-billet" style="display:none;">
-            <div class="page-eyebrow"><span class="eyebrow-dot"></span>Réservation confirmée</div>
-            <h1 class="page-title">Votre billet <span>est prêt</span></h1>
-            
-            <div id="tickets-container"></div>
+        <!-- EN-TÊTE -->
+        <div class="page-eyebrow"><span class="eyebrow-dot"></span>Réservation</div>
+        <h1 class="page-title">Choisissez <span>vos places</span></h1>
+
+        <!-- RÉSUMÉ TRAJET -->
+        <div class="trajet-recap" id="trajet-recap">
+            <div class="recap-item">
+                <span class="recap-label">Trajet</span>
+                <span class="recap-value" id="recap-trajet">—</span>
+            </div>
+            <div class="recap-sep"></div>
+            <div class="recap-item">
+                <span class="recap-label">Date</span>
+                <span class="recap-value" id="recap-date">—</span>
+            </div>
+            <div class="recap-sep"></div>
+            <div class="recap-item">
+                <span class="recap-label">Départ</span>
+                <span class="recap-value" id="recap-heure">—</span>
+            </div>
+            <div class="recap-sep"></div>
+            <div class="recap-item">
+                <span class="recap-label">Voyageurs</span>
+                <span class="recap-value" id="recap-voyageurs">—</span>
+            </div>
         </div>
 
-        <!-- ── HISTORIQUE ── -->
-        <div class="historique-section">
-            <div class="page-eyebrow" style="margin-top:48px;"><span class="eyebrow-dot"></span>Mon compte</div>
-            <h2 class="page-title" style="font-size:clamp(22px,3vw,32px);">Historique des <span>réservations</span></h2>
+        <!-- SÉLECTEUR DE VOITURE -->
+        <div class="section-header">
+            <span class="section-label">Voiture</span>
+            <div class="voiture-selector" id="voiture-selector"></div>
+        </div>
 
-            <div id="mes-billets-list" class="billets-grid">
-                <p class="loading-msg">Chargement de vos réservations...</p>
+        <!-- LÉGENDE -->
+        <div class="legende">
+            <div class="leg-item"><div class="leg-dot leg-libre"></div>Libre</div>
+            <div class="leg-item"><div class="leg-dot leg-selec"></div>Sélectionné</div>
+            <div class="leg-item"><div class="leg-dot leg-occupe"></div>Occupé</div>
+        </div>
+
+        <!-- WAGON -->
+        <div class="wagon-wrap" id="wagon-wrap">
+            <div class="wagon-body" id="wagon-body">
+                <div class="loading-msg">Chargement des places...</div>
             </div>
+        </div>
+
+        <!-- RÉCAP SÉLECTION -->
+        <div class="recap-card">
+            <div class="recap-row">
+                <span class="recap-label">Places sélectionnées</span>
+                <div class="places-tags" id="tags-places">
+                    <span class="no-place">Aucune place choisie</span>
+                </div>
+            </div>
+            <div class="recap-row">
+                <span class="recap-label">Progression</span>
+                <span id="info-progression">0 / 0 places</span>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="footer-actions">
+            <button class="btn-back" onclick="history.back()">← Retour</button>
+            <button class="btn-valider" id="btn-valider" disabled onclick="validerPlaces()">
+                Confirmer les places
+                <span class="btn-arrow">→</span>
+            </button>
         </div>
 
     </main>
 
-    <!-- jsPDF + QRCode -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../js/theme.js"></script>
     <script src="../js/logout.js"></script>
-    <script src="../js/billet.js"></script>
+    <script src="../js/places.js"></script>
 </body>
 </html>

@@ -252,15 +252,22 @@ document.getElementById('btn-valider-options').addEventListener('click', () => {
     };
     
     localStorage.setItem(`panier_${searchDataGlobal.etape}`, JSON.stringify(billet));
+    // sauvegarder le trajet pour la page places
+    localStorage.setItem('trajet_selectionne', JSON.stringify({
+        _id:          trajetEnCoursDeSelection._id,
+        gare_depart:  trajetEnCoursDeSelection.gare_depart,
+        gare_arrivee: trajetEnCoursDeSelection.gare_arrivee,
+        date_depart:  trajetEnCoursDeSelection.date_depart,
+        heure_depart: trajetEnCoursDeSelection.heure_depart,
+        prix_total:   prixTotalAffiche
+    }));
 
     if(searchDataGlobal.etape === 'aller' && searchDataGlobal.retour && searchDataGlobal.retour !== 'undefined' && searchDataGlobal.retour !== '') {
-        // Rediriger vers la même page mais pour le retour
-        window.location.href = `trajets.html?depart=${encodeURIComponent(searchDataGlobal.arrivee)}&arrivee=${encodeURIComponent(searchDataGlobal.depart)}&date=${encodeURIComponent(searchDataGlobal.retour)}&etape=retour`;
+         // Aller-retour d'abord choisir les places de l'aller
+        window.location.href = `places.html?train_id=${trajetEnCoursDeSelection._id}&nb_voyageurs=${nbVoyageurs}&suite=retour&depart=${encodeURIComponent(searchDataGlobal.arrivee)}&arrivee=${encodeURIComponent(searchDataGlobal.depart)}&date_retour=${encodeURIComponent(searchDataGlobal.retour)}`;
     } else {
-        alert("Trajet ajouté au panier !");
-        // Rediriger vers le panier
-        window.location.href = '/panier.html';
-    }
+        // Aller simple places puis panier
+        window.location.href = `places.html?train_id=${trajetEnCoursDeSelection._id}&nb_voyageurs=${nbVoyageurs}&suite=panier`;    }
 
 });
 
