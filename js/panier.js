@@ -26,7 +26,6 @@ function chargerPanier() {
         
         const prixTotalTrajet = (trajet.prix_base * nbV);
 
-        
         totalGlobal += prixTotalTrajet;
 
         let passagersHTML = trajet.passagers.map((p, index) => `
@@ -35,16 +34,16 @@ function chargerPanier() {
                 <div class="input-group full-width">
                     <label>Nom complet</label>
                     <input type="text" placeholder="Ex: Jean Dupont" value="${p.nom || ''}" 
-                        oninput="modifierPassager('${key}', ${index}, 'nom', this.value)">
+                        oninput="modifierPassager('${key}', ${index}, 'nom', this.value)" required>
                 </div>
 
                 <div class="input-group small-width">
                     <label>Âge</label>
                     <input type="number" min="0" max="120" value="${p.age || 30}" 
-                        oninput="modifierPassager('${key}', ${index}, 'age', this.value)">
+                        oninput="modifierPassager('${key}', ${index}, 'age', this.value)" required>
                 </div>
 
-                <button class="btn-delete-row" title="Retirer ce voyageur"
+                <button type="button" class="btn-delete-row" title="Retirer ce voyageur"
                     onclick="retirerPassager('${key}', ${index})">×</button>
             </div>
         `).join('');
@@ -60,7 +59,7 @@ function chargerPanier() {
             
             <div class="passagers-liste">
                 ${passagersHTML}
-                <button onclick="ajouterPassager('${key}')" class="btn-member" style="margin-top:15px; font-size:0.8rem;">
+                <button type="button" onclick="ajouterPassager('${key}')" class="btn-member" style="margin-top:15px; font-size:0.8rem;">
                     + Ajouter un voyageur
                 </button>
             </div>
@@ -110,7 +109,31 @@ function retirerPassager(key, index) {
     chargerPanier();
 }
 
-function confirmerCommande() {
+function confirmerCommande(event) {
+    if (event) event.preventDefault(); 
+
+    const aller = JSON.parse(localStorage.getItem('panier_aller'));
+    const retour = JSON.parse(localStorage.getItem('panier_retour'));
+    let nomsManquants = false;
+
+    const verifierNoms = (trajet) => {
+        if (trajet && trajet.passagers) {
+            trajet.passagers.forEach(p => {
+                if (!p.nom || p.nom.trim() === '') {
+                    nomsManquants = true;
+                }
+            });
+        }
+    };
+
+    verifierNoms(aller);
+    verifierNoms(retour);
+
+    if (nomsManquants) {
+        alert("Veuillez renseigner le nom complet de tous les passagers avant de confirmer.");
+        return;
+    }
+
     const user = JSON.parse(localStorage.getItem('user'));
     
     if (!user) {

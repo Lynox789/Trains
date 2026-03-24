@@ -15,7 +15,7 @@ function addV() {
             <button type="button" class="btn-delete"><img src="img/trash.svg" style="width:18px;"></button>
         </div>
         <div class="voyageur-body">
-            <input type="number" name="age[]" placeholder="Âge" min="0" required>
+            <input type="number" name="age[]" placeholder="Âge" min="0" max="99" oninput="if(this.value > 99) this.value = 99; if(this.value < 0) this.value = 0;" required>
         </div>
     `;
 
@@ -40,7 +40,6 @@ function mettreAJourAffichage() {
     nbVoyageurs = cartes.length;
     compteur.innerText = nbVoyageurs;
 
-    // Met à jour le label counter-label si présent
     const label = document.getElementById('counter-label');
     if (label) {
         label.textContent = nbVoyageurs === 0 ? 'Aucun voyageur'

@@ -52,13 +52,11 @@
                     <span class="cyber-toggle-label-on">Light</span>
                 </div>
             </div>
-            <!-- Burger mobile -->
             <button class="nav-burger" id="burger" onclick="toggleMenu()">
                 <span></span><span></span><span></span>
             </button>
         </div>
     </header>
-    <!-- Menu mobile (hors header) -->
     <div class="nav-mobile" id="nav-mobile">
         <a href="dashboard.html">Voyager</a>
         <a href="#">Billets</a>
@@ -72,19 +70,23 @@
     <main class="container">
         <h1 class="Titre_principal">Mon Panier</h1>
         
-        <div id="liste-billets">
-            </div>
+        <form id="form-commande" onsubmit="confirmerCommande(event)">
+            
+            <div id="liste-billets">
+                </div>
 
-        <div class="panier-footer">
-            <div class="total-row">
-                <span>TOTAL À PAYER</span>
-                <span class="total-amount-val"><span id="prix-total">0.00</span> €</span>
+            <div class="panier-footer">
+                <div class="total-row">
+                    <span>TOTAL À PAYER</span>
+                    <span class="total-amount-val"><span id="prix-total">0.00</span> €</span>
+                </div>
+                
+                <button type="submit" class="btn-add btn-confirm-order">
+                    Confirmer la commande
+                </button>
             </div>
             
-            <button class="btn-add btn-confirm-order" onclick="confirmerCommande()">
-                Confirmer la commande
-            </button>
-        </div>
+        </form>
     </main>
 
     <script src="../js/panier.js"></script>
