@@ -5,6 +5,8 @@
 #ignore database connexion file
 connexion/Database.php
 
+view/pfp/*
+
 # Local data files
 /data/db/
 *.sock
