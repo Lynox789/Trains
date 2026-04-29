@@ -76,7 +76,7 @@
             <div class="timer" id="timer">03:00</div>
             
             <div class="ref-resa">
-                Référence de réservation : <strong id="ref-display" style="color: var(--accent-color);"></strong>
+                Référence : <strong id="ref-display" style="color: var(--accent-color);"></strong>
             </div>
             
             <div class="total-section">
@@ -85,28 +85,37 @@
             </div>
 
             <form id="form-paiement">
+                <div class="form-group" id="group-email-guest" style="display: none; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px;">
+                    <label>Email de contact</label>
+                    <input type="email" id="email-guest" placeholder="votre@email.com">
+                    <small style="opacity: 0.6; font-size: 0.8rem;">Pour l'envoi de vos billets</small>
+                </div>
+
                 <div class="form-group">
                     <label>Nom sur la carte</label>
-                    <input type="text" required placeholder="Ex: Jean Dupont">
+                    <input type="text" id="card-name" required placeholder="Ex: Jean Dupont">
                 </div>
+                
                 <div class="form-group">
                     <label>Numéro de carte</label>
                     <input type="text" maxlength="16" pattern="\d{16}" required placeholder="1234 5678 1234 5678">
                 </div>
+
                 <div class="row-inputs">
                     <div class="form-group" style="flex: 1;">
                         <label>Date Exp. (MM/AA)</label>
                         <input type="text" maxlength="5" placeholder="12/26" required pattern="(0[1-9]|1[0-2])\/\d{2}">
                     </div>
                     <div class="form-group" style="flex: 1;">
-                        <label>Trigramme (CVV)</label>
+                        <label>CVV</label>
                         <input type="text" maxlength="3" pattern="\d{3}" required placeholder="123">
                     </div>
                 </div>
+
                 <button type="submit" class="btn-checkout">Payer et valider</button>
             </form>
             
-            <div id="loading">Vérification auprès de la banque en cours...</div>
+            <div id="loading" style="display:none; text-align:center; margin-top:15px;">Vérification bancaire...</div>
         </div>
     </main>
     

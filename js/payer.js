@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const aller = JSON.parse(localStorage.getItem('panier_aller'));
+    const retour = JSON.parse(localStorage.getItem('panier_retour'));
+    const voyageurs = JSON.parse(localStorage.getItem('voyageurs') || '[]');
+    const places = JSON.parse(localStorage.getItem('places_choisies') || 'null');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let isGuest = urlParams.get('mode') === 'guest';
+
+    if (!user && !isGuest) {
+        // Pas de compte ET pas de mode invité spécifié -> Retour au choix
+        window.location.href = 'auth-choice.html';
+        return;
+    }
+    if (user) {
+        // Si l'utilisateur est connecté, on ignore le mode guest par sécurité
+        isGuest = false;
+    }
+
+    // Affichage du champ email pour les invités
+    const emailGroup = document.getElementById('group-email-guest');
+    const emailInput = document.getElementById('email-guest');
+    if (isGuest && emailGroup && emailInput) {
+        emailGroup.style.display = 'block';
+        emailInput.required = true;
+    }
+
     // EPIC 6 - Tâche 1: Générer et afficher la référence de réservation
     const reference = 'RES-' + Math.floor(Math.random() * 900000 + 100000);
     document.getElementById('ref-display').textContent = reference;
@@ -6,8 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Calcul du prix total (aller + retour éventuel)
     let total = 0;
-    const aller  = JSON.parse(localStorage.getItem('panier_aller')  || 'null');
-    const retour = JSON.parse(localStorage.getItem('panier_retour') || 'null');
     if (aller)  total += parseFloat(aller.prix_total  || 0);
     if (retour) total += parseFloat(retour.prix_total || 0);
     document.getElementById('total-pay').textContent = total.toFixed(2);
@@ -43,12 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const numAuth = 'AUTH-' + Math.floor(Math.random() * 10000);
             alert("Paiement autorisé ! N° d'autorisation de la banque : " + numAuth);
 
+            // On détermine l'identité de l'acheteur (pour le nom et le mail)
+            const destinataireEmail = isGuest ? emailInput.value : user.email;
+            const destinataireNom = isGuest ? document.getElementById('card-name')?.value : user.nom_complet;
+
             try {
-                const user      = JSON.parse(localStorage.getItem('user') || 'null');
-                const voyageurs = JSON.parse(localStorage.getItem('voyageurs') || '[]');
-                const places    = JSON.parse(localStorage.getItem('places_choisies') || 'null');
- 
-                // ── Construire les billets 
+                //Construire les billets 
                 const billets = [];
                 if (aller) {
                     billets.push({
@@ -80,11 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         options_choisies:    []
                     });
                 }
- 
-                // Préparation du Payload pour envoyer à server.js (et donc EmailJS)
+
+                // Préparation du Payload pour envoyer à server.js
                 const payload = {
-                    userId:    user?.id   || null,
-                    email:     user?.email,
+                    userId:    isGuest ? null : user?.id,
+                    email:     destinataireEmail,
                     billet: {
                         reference:       reference,
                         num_reservation: reference,
@@ -99,26 +124,28 @@ document.addEventListener('DOMContentLoaded', () => {
                         date:            aller?.date || aller?.date_depart || '—',
                         heure_depart:    aller?.heure_depart || '—',
                         heure_arrivee:   aller?.heure_arrivee || '—',
-                        nom_complet:     user?.nom_complet || 'Voyageur',
+                        nom_complet:     destinataireNom,
 
                         paiement: {
-                            nom_titulaire:    document.getElementById('nom-carte')?.value || 'Inconnu',
-                            numero_cb_masque: 'XXXX-XXXX-XXXX-' + (document.getElementById('num-carte')?.value?.slice(-4) || '0000'),
+                            nom_titulaire:    document.getElementById('card-name')?.value || document.getElementById('nom-carte')?.value || 'Inconnu',
+                            numero_cb_masque: 'XXXX-XXXX-XXXX-' + (document.querySelector('input[placeholder="1234 5678 1234 5678"]')?.value?.slice(-4) || '0000'),
                             num_autorisation: numAuth,
                             date_paiement:    new Date().toISOString()
                         }
                     }
                 };
- 
+
                 const response = await fetch('/api/send-ticket', {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body:    JSON.stringify(payload)
                 });
- 
+
                 if (response.ok) {
-                    // Si le paiement est réussi ET le mail EmailJS envoyé
-                    window.location.href = 'billet.html';
+                    localStorage.removeItem('panier_aller');
+                    localStorage.removeItem('panier_retour');
+                    alert("Paiement accepté ! Vos billets ont été envoyés à " + destinataireEmail);
+                    window.location.href = 'dashboard.html';
                 } else {
                     const errData = await response.json();
                     console.error('Erreur serveur :', errData);
@@ -128,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelector('.btn-checkout').style.display = 'block';
                     document.getElementById('loading').style.display = 'none';
                 }
- 
+
             } catch (err) {
                 console.error('Erreur :', err);
                 alert('Erreur de connexion au serveur.');

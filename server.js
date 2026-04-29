@@ -199,7 +199,7 @@ app.post('/api/send-ticket', async (req, res) => {
             user_id: process.env.EMAILJS_PUBLIC_KEY,
             accessToken: process.env.EMAILJS_PRIVATE_KEY,
             template_params: {
-                to_email: req.body.email || 'thinojanpulendran@gmail.com', // Remplace par ta vraie adresse pour le test                nom_complet: billet.nom_complet || 'Voyageur',
+                to_email: req.body.email,
                 reference: billet.reference || 'N/A',
                 depart: billet.depart || 'N/A',
                 arrivee: billet.arrivee || 'N/A',

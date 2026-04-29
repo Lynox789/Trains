@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>europe.transports | Finaliser ma commande</title>
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/panier.css">
+    <style>
+    .auth-selection-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+
+    .auth-choice-card {
+        background: var(--card-bg, inherit); 
+        border: 1px solid var(--border-color, rgba(128,128,128,0.2));
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 550px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        color: var(--text-color, inherit); 
+    }
+
+    .auth-choice-card h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: inherit; 
+    }
+
+    .auth-choice-card p {
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+        color: inherit;
+        opacity: 0.7;
+    }
+
+    .options-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn-auth-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 16px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+    }
+
+    .btn-auth-option:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-login {
+        background: #007bff; 
+        color: white;
+    }
+    .btn-login:hover {
+        filter: brightness(1.1);
+    }
+
+    .btn-guest {
+        background: transparent;
+        color: inherit;
+        border: 2px solid var(--border-color, #ccc);
+    }
+    .btn-guest:hover {
+        background: var(--text-color, rgba(128,128,128,0.1));
+    }
+
+    .btn-back {
+        margin-top: 25px;
+        color: inherit;
+        opacity: 0.6;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+        transition: opacity 0.2s;
+    }
+
+    .btn-back:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo"><img src="img/Logo.svg" alt="europe.transports"></div>
+        <nav>
+            <div class="nav-links">
+                <a href="dashboard.html">Voyager</a>
+                <a href="#">Billets</a>
+                <a href="#">Compte</a>
+                <a href="#">Contact</a>
+            </div>
+        </nav>
+        <div class="navbar_right">
+            <div class="cyber-toggle-wrapper">
+                <input class="cyber-toggle-checkbox" id="cyber-toggle" type="checkbox" />
+                <label class="cyber-toggle" for="cyber-toggle">
+                    <div class="cyber-toggle-track">
+                        <div class="cyber-toggle-track-glow"></div>
+                        <div class="cyber-toggle-track-dots">
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                            <span class="cyber-toggle-track-dot"></span>
+                        </div>
+                    </div>
+                    <div class="cyber-toggle-thumb">
+                        <div class="cyber-toggle-thumb-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M16.5 12c0-2.48-2.02-4.5-4.5-4.5s-4.5 2.02-4.5 4.5 2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5z..."/>
+                            </svg>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main class="container auth-selection-wrapper">
+        <div class="auth-choice-card">
+            <h1>Finaliser ma commande</h1>
+            <p>Connectez-vous pour bénéficier de vos tarifs adhérents ou continuez en quelques clics en tant qu'invité.</p>
+
+            <div class="options-stack">
+                <a href="login.html" class="btn-auth-option btn-login">
+                    <img src="img/Member.svg" alt="" style="width: 20px; filter: brightness(0) invert(1);">
+                    Se connecter / S'inscrire
+                </a>
+                
+                <a href="payer.html?mode=guest" class="btn-auth-option btn-guest">
+                    Continuer en tant qu'invité
+                </a>
+            </div>
+
+            <a href="panier.html" class="btn-back">← Retour au panier</a>
+        </div>
+    </main>
+
+    <script src="../js/theme.js"></script>
+</body>
+</html>

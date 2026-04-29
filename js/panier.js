@@ -137,8 +137,7 @@ function confirmerCommande(event) {
     const user = JSON.parse(localStorage.getItem('user'));
     
     if (!user) {
-        alert("Vous devez être connecté pour commander un billet.");
-        window.location.href = 'login.html'; 
+        window.location.href = 'auth-choice.html'; 
         return;
     }
     
