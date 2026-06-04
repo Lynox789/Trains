@@ -104,7 +104,7 @@ const trajetsManuels = [
 // ══════════════════════════════════════════
 function genererDates(nombreDeJours) {
     const datesGenerees = [];
-    let dateDeBase = new Date(2026, 1, 11); // 11 février 2026
+    let dateDeBase = new Date(2026, 3, 11); // 11 février 2026
 
     for (let i = 0; i < nombreDeJours; i++) {
         const dateCourante = new Date(dateDeBase);
