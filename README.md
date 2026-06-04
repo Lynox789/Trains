@@ -74,7 +74,7 @@ node server.js
 
 Le site sera alors accessible depuis votre navigateur à l'adresse suivante :
 
-👉 [http://localhost:5000](http://localhost:5000) *(ou le port que vous avez défini dans le fichier `.env`)*
+👉 [http://localhost:5000/dashboard.html](http://localhost:5000/dashboard.html) *(ou le port que vous avez défini dans le fichier `.env`)*
 
 ---
 
